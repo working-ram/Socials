@@ -4,27 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ram</title>
+</head>
   <style>
-    :root{--bg1:#071026;--bg2:#001627;--accent:#5b8cff}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef8}
+    :root{--bg1:#0b0b0d;--bg2:#121214;--core-1:rgba(255,255,255,0.85);--core-2:rgba(220,220,226,0.55);--accent:rgba(200,200,205,0.25)}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e9eef2}
     .toplink{position:fixed;left:16px;top:12px;font-family:system-ui,Arial,sans-serif;z-index:30}
-    .toplink a{color:#cfe6ff;text-decoration:none;font-size:14px}
+    .toplink a{color:#d9dde2;text-decoration:none;font-size:14px}
     .toplink img{height:36px;vertical-align:middle;margin-right:8px;border-radius:6px}
     .stage{position:fixed;inset:0;overflow:hidden}
+    /* core styled to feel like protons: soft bright center with small orbiting particles */
     .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:260px;height:260px;border-radius:50%;
-      background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.18), rgba(91,140,255,0.65) 20%, rgba(27,59,128,0.35) 60%, transparent 75%);
-      box-shadow:0 0 120px rgba(91,140,255,0.22),0 0 30px rgba(91,140,255,0.12) inset;filter:blur(0.4px);z-index:5;animation:pulse 4s ease-in-out infinite}
-    .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 40px rgba(91,140,255,0.06) inset;pointer-events:none}
-    .ring.r1{width:420px;height:420px;border:1px solid rgba(91,140,255,0.06);animation:spin 18s linear infinite}
-    .ring.r2{width:340px;height:340px;border:1px solid rgba(236,72,153,0.03);animation:spin 26s linear reverse infinite}
+      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.08) 10%, rgba(230,230,235,0.04) 40%, transparent 70%),
+                 radial-gradient(circle at 35% 30%, var(--core-2) 0%, rgba(220,220,226,0.02) 40%, transparent 75%);
+      box-shadow:0 0 90px rgba(255,255,255,0.03),0 0 24px rgba(200,200,205,0.02) inset;z-index:5;animation:corePulse 5s ease-in-out infinite}
+    .protons{position:absolute;inset:0;border-radius:50%;pointer-events:none}
+    .proton-wrap{position:absolute;left:50%;top:50%;transform-origin:center;}
+    .proton{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;background:radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(245,245,247,0.7) 40%, rgba(220,220,225,0.2) 100%);border-radius:50%;box-shadow:0 0 10px rgba(255,255,255,0.9),0 0 18px rgba(220,220,226,0.12)}
+    .proton.p2{width:8px;height:8px;margin:-4px 0 0 -4px;background:radial-gradient(circle, rgba(240,240,242,0.95) 0%, rgba(230,230,235,0.6) 40%)}
+    .proton.p3{width:6px;height:6px;margin:-3px 0 0 -3px;background:radial-gradient(circle, rgba(235,235,238,0.95) 0%, rgba(225,225,230,0.6) 40%)}
+    .orbit1{width:220px;height:220px;margin-left:-110px;margin-top:-110px;animation:spin 14s linear infinite}
+    .orbit2{width:160px;height:160px;margin-left:-80px;margin-top:-80px;animation:spin 9s linear reverse infinite}
+    .orbit3{width:100px;height:100px;margin-left:-50px;margin-top:-50px;animation:spin 6s linear infinite}
+    .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 20px rgba(255,255,255,0.02) inset;pointer-events:none}
+    .ring.r1{width:420px;height:420px;border:1px solid rgba(255,255,255,0.02)}
+    .ring.r2{width:340px;height:340px;border:1px solid rgba(255,255,255,0.01)}
     .center{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,Arial,sans-serif;font-size:56px}
-    .name{background:linear-gradient(90deg,#dbeafe,#c7f9ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-    @keyframes pulse{0%{transform:translate(-50%,-50%) scale(0.98)}50%{transform:translate(-50%,-50%) scale(1.03)}100%{transform:translate(-50%,-50%) scale(0.98)}}
-    @keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-    /* subtle floating nebula */
-    .nebula{position:fixed;inset:-20% -10% -20% -10%;background:radial-gradient(600px 300px at 20% 30%, rgba(91,140,255,0.08), transparent 10%),radial-gradient(500px 250px at 80% 70%, rgba(236,72,153,0.06), transparent 8%);mix-blend-mode:screen;pointer-events:none;animation:drift 12s ease-in-out infinite}
-    @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
-    /* small responsive tweaks */
+    .name{background:linear-gradient(90deg,#f6f7f8,#dfe6ea);-webkit-background-clip:text;background-clip:text;color:transparent;filter:brightness(0.98)}
+    @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    /* subtle gray nebula */
+    .nebula{position:fixed;inset:-20% -10% -20% -10%;background:radial-gradient(600px 300px at 20% 30%, rgba(200,200,205,0.04), transparent 10%),radial-gradient(500px 250px at 80% 70%, rgba(220,220,225,0.03), transparent 8%);mix-blend-mode:screen;pointer-events:none;animation:drift 14s ease-in-out infinite}
+    @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
     @media (max-width:520px){.core{width:180px;height:180px}.center{font-size:32px}}
   </style>
 </head>
@@ -38,7 +48,15 @@
     <div class="nebula"></div>
     <div class="ring r1"></div>
     <div class="ring r2"></div>
-    <div class="core"></div>
+    <div class="core">
+      <div class="protons">
+        <div class="proton-wrap orbit1"><div class="proton p1" style="transform:translateX(110px)"></div></div>
+        <div class="proton-wrap orbit2"><div class="proton p2" style="transform:translateX(80px)"></div></div>
+        <div class="proton-wrap orbit3"><div class="proton p3" style="transform:translateX(50px)"></div></div>
+        <div class="proton-wrap orbit1" style="animation-duration:18s;"><div class="proton p2" style="transform:translateX(-95px)"></div></div>
+        <div class="proton-wrap orbit2" style="animation-duration:11s;"><div class="proton p3" style="transform:translateX(-65px)"></div></div>
+      </div>
+    </div>
   </div>
 
   <div class="center"><span class="name">Ram</span></div>
