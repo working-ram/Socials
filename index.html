@@ -43,12 +43,15 @@
     .card-back::before,.card-back::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.12}
     .card-back::before{background:repeating-linear-gradient(90deg, rgba(2,32,90,0.14) 0 2px, transparent 2px 10px);animation:glitchShiftBack 2.8s linear infinite}
     .card-back::after{background:linear-gradient(180deg, rgba(0,0,0,0.05), transparent 75%);opacity:0.08}
-    .card-glitch{position:absolute;inset:18px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:radial-gradient(circle at 40% 30%, rgba(255,255,255,0.24), transparent 22%),repeating-linear-gradient(90deg, rgba(18,48,112,0.12) 0 2px, transparent 2px 8px),repeating-linear-gradient(180deg, rgba(0,0,0,0.04) 0 1px, transparent 1px 12px);mix-blend-mode:screen;opacity:0.85;animation:glitchShiftSoft 4.2s linear infinite}
-    .card-text{position:absolute;inset:18px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(22px);z-index:5;opacity:0.28;font-family:ui-monospace,monospace;font-size:10px;line-height:1.2;letter-spacing:1px;color:#15223d;text-align:center;white-space:pre-wrap;overflow:hidden;}
-    .card-text::before{content:"境界の白 境界の白 境界の白 境界の白 境界の白\A境界の白 境界の白 境界の白 境界の白 境界の白\A境界の白 境界の白 境界の白 境界の白 境界の白\A境界の白 境界の白 境界の白 境界の白 境界の白";position:absolute;inset:0;color:#112334;opacity:0.22;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);filter:blur(0.2px);}
-    .card-text::after{content:"境界の白 境界の白 境界の白 境界の白 境界の白\A境界の白 境界の白 境界の白 境界の白 境界の白\A境界の白 境界の白 境界の白 境界の白 境界の白\A境界の白 境界の白 境界の白 境界の白 境界の白";position:absolute;inset:0;color:#6d7992;opacity:0.16;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);animation:glitchText 1.8s infinite alternate;}
-    .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none;padding:10px;}
-    .card-img{display:block;width:100%;height:100%;max-height:100%;max-width:100%;border-radius:12px;filter:drop-shadow(0 18px 42px rgba(0,0,0,0.24));transform:translateZ(46px);image-rendering:optimizeQuality;object-fit:contain}
+    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(220,40,70,0.16), transparent 30%),repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 8px),repeating-linear-gradient(180deg, rgba(255,15,60,0.06) 0 1px, transparent 1px 8px),radial-gradient(circle at 25% 18%, rgba(255,255,255,0.22), transparent 20%);mix-blend-mode:screen;opacity:0.95;animation:glitchShiftSoft 3s linear infinite}
+    .card-text{position:absolute;inset:16px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(24px);z-index:6;opacity:0.42;font-family:ui-monospace,monospace;font-size:11px;line-height:1.25;letter-spacing:1.2px;color:#eef3ff;text-align:center;white-space:pre-wrap;overflow:hidden;}
+    .card-text::before{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#ff7c9d;opacity:0.18;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);filter:blur(0.3px);}
+    .card-text::after{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#9cb3ff;opacity:0.16;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);animation:glitchText 1.4s infinite alternate;}
+    .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none;padding:0;}
+    .card-img{display:block;width:100%;height:100%;border-radius:16px;filter:drop-shadow(0 28px 64px rgba(0,0,0,0.35));transform:translateZ(46px);image-rendering:optimizeQuality;object-fit:cover}
+    .card-back{background:linear-gradient(180deg, rgba(16,18,28,0.98), rgba(8,10,18,0.94)),radial-gradient(circle at 25% 18%, rgba(255,255,255,0.08), transparent 24%);}
+    .card-back::before{background:repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 8px);animation:glitchShiftBack 2.4s linear infinite;opacity:0.18;}
+    .card-back::after{background:linear-gradient(180deg, rgba(255,75,90,0.05), transparent 70%);opacity:0.16;}
     /* outer glitch overlays for scanlines */
     .card::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.06}
     .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.04) 1px, transparent 1px);background-size:100% 7px;animation:scanline 5.4s linear infinite}
@@ -112,7 +115,7 @@
       if(!card) return;
       const inner = card.querySelector('.card-inner');
       let mouseX = 0, mouseY = 0;
-      let tx = 0, ty = 0, trX = 0, trY = 0;
+      let trX = 0, trY = 0;
       const ease = 0.12;
 
       function onMove(e){
@@ -128,20 +131,14 @@
       window.addEventListener('touchmove', onMove, {passive:true});
 
       function raf(){
-        // target translations and rotations based on card-relative cursor position
-        const targetX = mouseX * 22;
-        const targetY = mouseY * 18;
-        const targetRotY = -mouseX * 34; // invert so card faces cursor direction
-        const targetRotX = -mouseY * 28;
-        const targetRotZ = mouseX * 2.5;
+        const targetRotY = mouseX * 36;
+        const targetRotX = mouseY * 30;
+        const targetRotZ = mouseX * 3;
 
-        tx += (targetX - tx) * ease;
-        ty += (targetY - ty) * ease;
         trY += (targetRotY - trY) * ease;
         trX += (targetRotX - trX) * ease;
 
-        // apply transforms: card moves and tilts in 3D
-        card.style.transform = `translateY(calc(-50% + ${ty}px)) translateX(${tx}px)`;
+        card.style.transform = 'translateY(-50%)';
         inner.style.transform = `rotateX(${trX}deg) rotateY(${trY}deg) rotateZ(${targetRotZ}deg)`;
 
         requestAnimationFrame(raf);
