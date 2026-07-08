@@ -44,8 +44,12 @@
     .card-back::before{background:repeating-linear-gradient(90deg, rgba(2,32,90,0.14) 0 2px, transparent 2px 10px);animation:glitchShiftBack 2.8s linear infinite}
     .card-back::after{background:linear-gradient(180deg, rgba(0,0,0,0.05), transparent 75%);opacity:0.08}
     .card-glitch{position:absolute;inset:18px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:radial-gradient(circle at 40% 30%, rgba(255,255,255,0.24), transparent 22%),repeating-linear-gradient(90deg, rgba(18,48,112,0.12) 0 2px, transparent 2px 8px),repeating-linear-gradient(180deg, rgba(0,0,0,0.04) 0 1px, transparent 1px 12px);mix-blend-mode:screen;opacity:0.85;animation:glitchShiftSoft 4.2s linear infinite}
-    .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none}
-    .card-img{display:block;width:94%;max-height:94%;height:auto;margin:0 auto;border-radius:12px;filter:drop-shadow(0 18px 42px rgba(0,0,0,0.24));transform:translateZ(46px);image-rendering:optimizeQuality}
+    .card-text{position:absolute;inset:22px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(22px);z-index:5;opacity:0.2;font-family:ui-monospace,monospace;font-size:10px;line-height:1.2;letter-spacing:1px;color:#0f1d3d;text-align:center;white-space:pre-wrap;overflow:hidden;}
+    .card-text span{display:block;transform:translateZ(0);}
+    .card-text::before{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";white-space:pre;}
+    .card-text::after{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;top:2px;left:-1px;color:#6d7992;opacity:0.25;mix-blend-mode:screen;animation:glitchText 2.4s infinite alternate;}
+    .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none;padding:8px;}
+    .card-img{display:block;width:100%;height:auto;max-height:100%;max-width:100%;border-radius:12px;filter:drop-shadow(0 18px 42px rgba(0,0,0,0.24));transform:translateZ(46px);image-rendering:optimizeQuality}
     /* outer glitch overlays for scanlines */
     .card::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.06}
     .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.04) 1px, transparent 1px);background-size:100% 7px;animation:scanline 5.4s linear infinite}
@@ -62,7 +66,9 @@
     @keyframes scanline{0%{opacity:0.03;background-position:0 0}50%{opacity:0.07;background-position:0 26px}100%{opacity:0.03;background-position:0 0}}
     @keyframes glitchShift{0%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(2px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
     @keyframes glitchShiftBack{0%{background-position:0 0}25%{background-position:40px 0}50%{background-position:-18px 0}75%{background-position:12px 0}100%{background-position:0 0}}
-    @media (max-width:520px){.card{left:18px;width:180px;height:260px}.card-img{max-width:90%;margin:14px auto}}
+    @keyframes glitchShiftSoft{0%{transform:translateY(0)}20%{transform:translateY(-2px) translateX(1px)}40%{transform:translateY(1px) translateX(-1px)}60%{transform:translateY(-1px) translateX(2px)}80%{transform:translateY(0) translateX(-1px)}100%{transform:translateY(0) translateX(0)}}
+    @keyframes glitchText{0%{transform:translate(0,0)}20%{transform:translate(-1px,1px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-1px,-1px)}80%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
+    @media (max-width:520px){.card{left:18px;width:180px;height:260px}.card-img{width:95%;margin:14px auto}}
   </style>
 </head>
 <body>
@@ -93,6 +99,7 @@
     <div class="card-inner">
       <div class="card-back"></div>
       <div class="card-glitch"></div>
+      <div class="card-text"></div>
       <div class="card-front">
         <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img">
       </div>
@@ -112,11 +119,10 @@
       function onMove(e){
         const x = (e.clientX || (e.touches && e.touches[0].clientX)) || 0;
         const y = (e.clientY || (e.touches && e.touches[0].clientY)) || 0;
-        const rect = card.getBoundingClientRect();
-        const dx = x - (rect.left + rect.width / 2);
-        const dy = y - (rect.top + rect.height / 2);
-        mouseX = Math.max(-1, Math.min(1, dx / (rect.width / 2)));
-        mouseY = Math.max(-1, Math.min(1, dy / (rect.height / 2)));
+        const nx = x / window.innerWidth - 0.5;
+        const ny = y / window.innerHeight - 0.5;
+        mouseX = Math.max(-1, Math.min(1, nx * 2));
+        mouseY = Math.max(-1, Math.min(1, ny * 2));
       }
 
       window.addEventListener('mousemove', onMove, {passive:true});
