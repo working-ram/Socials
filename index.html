@@ -43,15 +43,19 @@
     .card-back::before,.card-back::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.12}
     .card-back::before{background:repeating-linear-gradient(90deg, rgba(2,32,90,0.14) 0 2px, transparent 2px 10px);animation:glitchShiftBack 2.8s linear infinite}
     .card-back::after{background:linear-gradient(180deg, rgba(0,0,0,0.05), transparent 75%);opacity:0.08}
-    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(255,80,120,0.22), transparent 28%),repeating-linear-gradient(90deg, rgba(255,255,255,0.36) 0 2px, transparent 2px 6px),repeating-linear-gradient(180deg, rgba(40,200,255,0.16) 0 1px, transparent 1px 5px),radial-gradient(circle at 20% 18%, rgba(255,255,255,0.38), transparent 22%);mix-blend-mode:screen;opacity:1;animation:glitchShiftSoft 2s linear infinite}
-    .card-glitch::before,.card-glitch::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;mix-blend-mode:screen;opacity:0.28;}
-    .card-glitch::before{background:linear-gradient(90deg, rgba(255,32,96,0.42) 0 30%, transparent 30% 60%, rgba(255,32,96,0.22) 60% 100%);filter:blur(0.6px);animation:glitchRed 0.12s infinite;}
-    .card-glitch::after{background:linear-gradient(90deg, rgba(64,172,255,0.34) 0 30%, transparent 30% 60%, rgba(64,172,255,0.22) 60% 100%);filter:blur(0.6px);animation:glitchBlue 0.14s infinite;}
-    .card-text{position:absolute;inset:16px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(24px);z-index:6;opacity:0.98;font-family:ui-monospace,monospace;font-size:11px;line-height:1.25;letter-spacing:1.2px;color:#ffffff;text-align:center;white-space:pre-wrap;overflow:hidden;text-shadow:0 0 8px rgba(255,255,255,0.16);}
-    .card-text::before{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#ffffff;opacity:0.24;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);filter:blur(0.15px);animation:glitchTextA 0.9s infinite alternate ease-in-out;}
-    .card-text::after{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#ffffff;opacity:0.18;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);animation:glitchTextB 0.7s infinite alternate ease-in-out;}
+    .card-back{position:absolute;inset:12px;border-radius:20px;background:radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 18%),radial-gradient(circle at 85% 15%, rgba(56,178,255,0.12), transparent 16%),linear-gradient(180deg, rgba(12,14,18,0.98), rgba(10,12,18,0.96));box-shadow:0 12px 34px rgba(0,0,0,0.42) inset;transform:translateZ(6px);overflow:hidden;}
+    .card-back::before,.card-back::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0.18;}
+    .card-back::before{background:repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 5px);}
+    .card-back::after{background:linear-gradient(180deg, rgba(255,32,96,0.12), transparent 25%),linear-gradient(90deg, rgba(32,168,255,0.12), transparent 15%);}
+    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0.14), transparent 24%),repeating-linear-gradient(90deg, rgba(255,255,255,0.28) 0 2px, transparent 2px 6px),repeating-linear-gradient(180deg, rgba(255,0,120,0.08) 0 1px, transparent 1px 4px),radial-gradient(circle at 15% 15%, rgba(255,255,255,0.22), transparent 22%);mix-blend-mode:screen;opacity:1;animation:glitchShiftSoft 1.9s linear infinite;}
+    .card-glitch::before,.card-glitch::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;mix-blend-mode:screen;opacity:0.32;}
+    .card-glitch::before{background:linear-gradient(90deg, rgba(255,16,88,0.45) 0 35%, transparent 35% 65%, rgba(255,16,88,0.28) 65% 100%);filter:blur(0.6px);animation:glitchRed 0.11s infinite;}
+    .card-glitch::after{background:linear-gradient(90deg, rgba(58,182,255,0.42) 0 35%, transparent 35% 65%, rgba(58,182,255,0.28) 65% 100%);filter:blur(0.6px);animation:glitchBlue 0.13s infinite;}
+    .card-text{position:absolute;inset:18px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(24px);z-index:6;opacity:1;font-family:ui-monospace,monospace;font-size:11px;line-height:1.2;letter-spacing:1.2px;color:#ffffff;text-align:center;white-space:pre-wrap;overflow:hidden;text-shadow:0 0 10px rgba(255,255,255,0.22);}
+    .card-text::before{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#ffffff;opacity:0.24;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);animation:glitchTextA 0.8s infinite alternate ease-in-out;}
+    .card-text::after{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#ffffff;opacity:0.16;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);animation:glitchTextB 0.65s infinite alternate ease-in-out;}
     .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none;padding:0;}
-    .card-img{display:block;width:100%;height:100%;border-radius:16px;filter:drop-shadow(0 28px 64px rgba(0,0,0,0.35));transform:translateZ(46px);image-rendering:auto;object-fit:cover}
+    .card-img{display:block;width:auto;height:100%;max-width:100%;border-radius:16px;filter:drop-shadow(0 28px 64px rgba(0,0,0,0.35));transform:translateZ(46px);image-rendering:auto;object-fit:contain}
     .card-back{background:linear-gradient(180deg, rgba(10,12,16,0.98), rgba(5,8,14,0.94)),radial-gradient(circle at 24% 12%, rgba(255,255,255,0.08), transparent 24%);}
     .card-back::before{background:repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 8px);animation:glitchShiftBack 2.4s linear infinite;opacity:0.18;}
     .card-back::after{background:linear-gradient(180deg, rgba(255,75,90,0.06), transparent 70%);opacity:0.16;}
@@ -129,19 +133,21 @@
         const x = (e.clientX || (e.touches && e.touches[0].clientX)) || 0;
         const y = (e.clientY || (e.touches && e.touches[0].clientY)) || 0;
         const rect = card.getBoundingClientRect();
-        const nx = (x - rect.left) / rect.width - 0.5;
-        const ny = (y - rect.top) / rect.height - 0.5;
-        mouseX = Math.max(-1, Math.min(1, nx * 2));
-        mouseY = Math.max(-1, Math.min(1, ny * 2));
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const nx = (x - centerX) / (rect.width / 2);
+        const ny = (y - centerY) / (rect.height / 2);
+        mouseX = Math.max(-1, Math.min(1, nx));
+        mouseY = Math.max(-1, Math.min(1, ny));
       }
 
       window.addEventListener('mousemove', onMove, {passive:true});
       window.addEventListener('touchmove', onMove, {passive:true});
 
       function raf(){
-        const targetRotY = -mouseX * 32;
-        const targetRotX = -mouseY * 28;
-        const targetRotZ = mouseX * 2.8;
+        const targetRotY = -mouseX * 28;
+        const targetRotX = mouseY * 22;
+        const targetRotZ = mouseX * 2.4;
 
         trY += (targetRotY - trY) * ease;
         trX += (targetRotX - trX) * ease;
