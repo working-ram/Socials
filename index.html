@@ -37,28 +37,37 @@
     @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
     @media (max-width:520px){.core{width:180px;height:180px}.center{font-size:32px}}
     /* 3D card styles */
-    .card{position:fixed;left:36px;top:50%;transform:translateY(-50%);width:220px;height:300px;border-radius:14px;box-shadow:0 20px 50px rgba(4,8,15,0.45);overflow:visible;z-index:60;perspective:1200px}
-    .card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .12s ease;will-change:transform}
-    .card-back{position:absolute;inset:8px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#f3f4f6);box-shadow:0 6px 18px rgba(10,12,20,0.08) inset;transform:translateZ(6px)}
+    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;border-radius:20px;box-shadow:0 40px 90px rgba(0,0,0,0.28);overflow:visible;z-index:70;perspective:1700px}
+    .card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;transition:transform .08s ease-out;will-change:transform}
+    .card-back{position:absolute;inset:12px;border-radius:20px;background:radial-gradient(circle at 50% 24%, rgba(255,255,255,0.96), rgba(241,242,246,0.92) 24%, rgba(225,226,231,0.78) 60%, rgba(210,211,216,0.55) 100%);box-shadow:0 10px 32px rgba(14,18,33,0.08) inset;transform:translateZ(6px);overflow:hidden}
     .card-back::before,.card-back::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.12}
-    /* subtle blue/black glitch stripes on the back */
-    .card-back::before{background:repeating-linear-gradient(90deg, rgba(3,30,80,0.10) 0 2px, transparent 2px 8px);animation:glitchShiftBack 2.8s linear infinite}
-    .card-back::after{background:linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));opacity:0.06}
-    .card-front{position:absolute;inset:8px;border-radius:12px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(26px)}
-    .card-img{display:block;max-width:86%;height:auto;margin:0 auto;border-radius:8px;filter:drop-shadow(0 14px 30px rgba(0,0,0,0.24));transform:translateZ(36px)}
+    .card-back::before{background:repeating-linear-gradient(90deg, rgba(2,32,90,0.14) 0 2px, transparent 2px 10px);animation:glitchShiftBack 2.8s linear infinite}
+    .card-back::after{background:linear-gradient(180deg, rgba(0,0,0,0.05), transparent 75%);opacity:0.08}
+    .card-glitch{position:absolute;inset:18px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:radial-gradient(circle at 40% 30%, rgba(255,255,255,0.24), transparent 22%),repeating-linear-gradient(90deg, rgba(18,48,112,0.12) 0 2px, transparent 2px 8px),repeating-linear-gradient(180deg, rgba(0,0,0,0.04) 0 1px, transparent 1px 12px);mix-blend-mode:screen;opacity:0.85;animation:glitchShiftSoft 4.2s linear infinite}
+    .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none}
+    .card-img{display:block;width:94%;max-height:94%;height:auto;margin:0 auto;border-radius:12px;filter:drop-shadow(0 18px 42px rgba(0,0,0,0.24));transform:translateZ(46px);image-rendering:optimizeQuality}
     /* outer glitch overlays for scanlines */
     .card::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.06}
-    .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.04) 1px, transparent 1px);background-size:100% 6px;animation:scanline 6s linear infinite}
-    .card::after{background-image:repeating-linear-gradient(90deg,rgba(20,60,140,0.04) 0 2px, transparent 2px 10px);opacity:0.05;animation:glitchShift 3.6s linear infinite}
-    @keyframes scanline{0%{opacity:0.04;background-position:0 0}50%{opacity:0.08;background-position:0 30px}100%{opacity:0.04;background-position:0 0}}
+    .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.04) 1px, transparent 1px);background-size:100% 7px;animation:scanline 5.4s linear infinite}
+    .card::after{background-image:repeating-linear-gradient(90deg,rgba(20,60,140,0.06) 0 2px, transparent 2px 10px);opacity:0.06;animation:glitchShift 3s linear infinite}
+    @keyframes scanline{0%{opacity:0.03;background-position:0 0}50%{opacity:0.07;background-position:0 26px}100%{opacity:0.03;background-position:0 0}}
     @keyframes glitchShift{0%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(2px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
-    @keyframes glitchShiftBack{0%{background-position:0 0}25%{background-position:30px 0}50%{background-position:-20px 0}75%{background-position:10px 0}100%{background-position:0 0}}
-    @media (max-width:520px){.card{left:14px;width:160px;height:220px}.card-img{max-width:92%;margin:14px auto}}
+    @keyframes glitchShiftBack{0%{background-position:0 0}25%{background-position:40px 0}50%{background-position:-18px 0}75%{background-position:12px 0}100%{background-position:0 0}}
+    @keyframes glitchShiftSoft{0%{transform:translateY(0)}20%{transform:translateY(-2px) translateX(1px)}40%{transform:translateY(1px) translateX(-1px)}60%{transform:translateY(-1px) translateX(2px)}80%{transform:translateY(0) translateX(-1px)}100%{transform:translateY(0) translateX(0)}}
+    @media (max-width:520px){.card{left:18px;width:200px;height:300px}.card-img{width:95%;margin:14px auto}}
+
+    .card::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.06}
+    .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.04) 1px, transparent 1px);background-size:100% 7px;animation:scanline 5.4s linear infinite}
+    .card::after{background-image:repeating-linear-gradient(90deg,rgba(20,60,140,0.05) 0 2px, transparent 2px 10px);opacity:0.06;animation:glitchShift 3s linear infinite}
+    @keyframes scanline{0%{opacity:0.03;background-position:0 0}50%{opacity:0.07;background-position:0 26px}100%{opacity:0.03;background-position:0 0}}
+    @keyframes glitchShift{0%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(2px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
+    @keyframes glitchShiftBack{0%{background-position:0 0}25%{background-position:40px 0}50%{background-position:-18px 0}75%{background-position:12px 0}100%{background-position:0 0}}
+    @media (max-width:520px){.card{left:18px;width:180px;height:260px}.card-img{max-width:90%;margin:14px auto}}
   </style>
 </head>
 <body>
   <div class="toplink">
-    <a href="https://working-ram.github.io/Socials/"><img src="https://raw.githubusercontent.com/working-ram/Socials/main/Assets/Ram_Icon.png" alt="Ram"></a>
+    <a href="https://working-ram.github.io/Socials/"><img src="Assets/Ram_Icon.png" alt="Ram"></a>
     <a href="https://working-ram.github.io/Socials/">working-ram.github.io/Socials</a>
   </div>
 
@@ -83,8 +92,9 @@
   <div class="card" id="ramCard" aria-hidden="false">
     <div class="card-inner">
       <div class="card-back"></div>
+      <div class="card-glitch"></div>
       <div class="card-front">
-        <img src="https://raw.githubusercontent.com/working-ram/Socials/main/Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img">
+        <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img">
       </div>
     </div>
   </div>
@@ -102,31 +112,32 @@
       function onMove(e){
         const x = (e.clientX || (e.touches && e.touches[0].clientX)) || 0;
         const y = (e.clientY || (e.touches && e.touches[0].clientY)) || 0;
-        // compute relative to viewport center
-        const nx = (x / window.innerWidth - 0.0); // prefer left bias
-        const ny = (y / window.innerHeight - 0.5);
-        mouseX = nx; mouseY = ny;
+        const rect = card.getBoundingClientRect();
+        const dx = x - (rect.left + rect.width / 2);
+        const dy = y - (rect.top + rect.height / 2);
+        mouseX = Math.max(-1, Math.min(1, dx / (rect.width / 2)));
+        mouseY = Math.max(-1, Math.min(1, dy / (rect.height / 2)));
       }
 
       window.addEventListener('mousemove', onMove, {passive:true});
       window.addEventListener('touchmove', onMove, {passive:true});
 
       function raf(){
-        // target translations and rotations
-          const targetX = (mouseX - 0.0) * 36; // follow mouse horizontally, biased to left
-          const targetY = mouseY * 28;
-          const targetRotY = (mouseX - 0.0) * 12; // degrees
-          const targetRotX = -mouseY * 9;
+        // target translations and rotations based on card-relative cursor position
+        const targetX = mouseX * 22;
+        const targetY = mouseY * 18;
+        const targetRotY = mouseX * 34; // degrees
+        const targetRotX = -mouseY * 28;
+        const targetRotZ = mouseX * 2.5;
 
-          tx += (targetX - tx) * ease;
-          ty += (targetY - ty) * ease;
-          trY += (targetRotY - trY) * ease;
-          trX += (targetRotX - trX) * ease;
+        tx += (targetX - tx) * ease;
+        ty += (targetY - ty) * ease;
+        trY += (targetRotY - trY) * ease;
+        trX += (targetRotX - trX) * ease;
 
-          // apply transforms: translate + rotate for 3D tilt (card rotates in 3D)
-          card.style.transform = `translateY(calc(-50% + ${ty}px)) translateX(${tx}px) rotateX(${trX}deg) rotateY(${trY}deg)`;
-          // inner keeps layered depth
-          inner.style.transform = `translateZ(0px)`;
+        // apply transforms: card moves and tilts in 3D
+        card.style.transform = `translateY(calc(-50% + ${ty}px)) translateX(${tx}px)`;
+        inner.style.transform = `rotateX(${trX}deg) rotateY(${trY}deg) rotateZ(${targetRotZ}deg)`;
 
         requestAnimationFrame(raf);
       }
