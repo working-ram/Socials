@@ -48,7 +48,12 @@
     .card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;transition:transform .06s ease-out;will-change:transform}
     .card-back{position:absolute;inset:12px;border-radius:20px;box-shadow:0 12px 34px rgba(0,0,0,0.42) inset;transform:translateZ(6px);overflow:hidden;background:linear-gradient(180deg, rgba(10,12,16,0.98), rgba(5,8,14,0.94));}
     /* keep card overlays subtle — main glitch is in bg */
-    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0.06), transparent 24%),repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 6px);mix-blend-mode:screen;opacity:0.55;filter:blur(.2px)}
+    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0.06), transparent 24%),repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 6px);mix-blend-mode:screen;opacity:0.55;filter:blur(.2px);overflow:hidden}
+    .card-glitch .j-line{position:absolute;white-space:nowrap;font-family:ui-monospace,monospace;font-weight:600;color:#fff;letter-spacing:2px;pointer-events:none;text-shadow:0 0 8px rgba(255,255,255,0.14)}
+    .card-glitch .j-line.layer-r{mix-blend-mode:screen;filter:brightness(1.05) saturate(1.3);color:#ff6ea0;opacity:0.7;transform-origin:center}
+    .card-glitch .j-line.layer-b{mix-blend-mode:screen;filter:brightness(1.05) saturate(1.3);color:#3aa6ff;opacity:0.7;transform-origin:center}
+    .card-glitch .j-line.layer-w{color:#ffffff;opacity:0.95;mix-blend-mode:normal}
+    .card-glitch .j-line{transition:transform .25s cubic-bezier(.2,.9,.2,1),opacity .25s linear}
     .card-text{position:absolute;inset:18px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(24px);z-index:6;opacity:1;font-family:ui-monospace,monospace;font-size:11px;line-height:1.2;letter-spacing:1.2px;color:#ffffff;text-align:center;white-space:pre-wrap;overflow:hidden;text-shadow:0 0 8px rgba(255,255,255,0.14)}
     .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none;padding:0;}
     /* image tweaks: use srcset for high-DPI, keep object-fit contain */
@@ -86,16 +91,11 @@
 
   <div class="center"><span class="name">Working Ram</span></div>
 
-  <!-- glitch background: Japanese text layers (white + RGB splits) -->
-  <div class="bg-glitch" id="bgGlitch" aria-hidden="true"></div>
-  <div class="bg-scan" aria-hidden="true"></div>
-  <div class="bg-strong-noise" aria-hidden="true"></div>
-
   <!-- Floating 3D card with character -->
   <div class="card" id="ramCard" aria-hidden="false">
     <div class="card-inner">
       <div class="card-back"></div>
-      <div class="card-glitch"></div>
+      <div class="card-glitch" id="cardGlitch" aria-hidden="true"></div>
       <div class="card-text" aria-hidden="true">RAM</div>
       <div class="card-front">
         <!-- add high-res fallbacks: supply Assets/Ram_Art_Transparent@2x.png and @3x if available -->
@@ -163,54 +163,47 @@
       }
       requestAnimationFrame(raf);
 
-      // --- background glitch text generator ---
-      const BG = document.getElementById('bgGlitch');
-      if(BG){
-        const TEXT = '境界の白  境界の白  境界の白  境界の白  境界の白';
+      // --- card glitch text generator ---
+      const cardGlitch = document.getElementById('cardGlitch');
+      if(cardGlitch){
+        const TEXT = 'RAM  RAM  RAM  RAM  RAM';
         const layers = [];
-        const count = 10; // number of lines across the screen
-        // create three layered variants per line (white, red-shift, blue-shift) for RGB split
+        const count = 8;
+
         for(let i=0;i<count;i++){
-          // base white line
           const w = document.createElement('div');
           w.className = 'j-line layer-w';
-          w.style.fontSize = `${22 + (i % 3) * 6}px`;
-          w.style.top = `${(i / (count - 1)) * 120}%`; // cover beyond viewport for randomness
-          w.style.left = `${10 + (i * 7) % 40}%`;
+          w.style.fontSize = `${12 + (i % 3) * 4}px`;
+          w.style.top = `${(i / Math.max(count - 1, 1)) * 105}%`;
+          w.style.left = `${6 + (i * 7) % 40}%`;
           w.style.opacity = 0.9;
-          w.textContent = TEXT.repeat(4);
-          BG.appendChild(w);
+          w.textContent = TEXT.repeat(2);
+          cardGlitch.appendChild(w);
           layers.push(w);
 
-          // red offset (slightly offset x)
           const r = w.cloneNode(true);
           r.className = 'j-line layer-r';
-          r.style.left = `calc(${w.style.left} - 6px)`;
+          r.style.left = `calc(${w.style.left} - 4px)`;
           r.style.opacity = 0.7;
-          BG.appendChild(r);
+          cardGlitch.appendChild(r);
           layers.push(r);
 
-          // blue offset (opposite)
           const b = w.cloneNode(true);
           b.className = 'j-line layer-b';
-          b.style.left = `calc(${w.style.left} + 6px)`;
+          b.style.left = `calc(${w.style.left} + 4px)`;
           b.style.opacity = 0.7;
-          BG.appendChild(b);
+          cardGlitch.appendChild(b);
           layers.push(b);
         }
 
-        // animate randomized jitter positions periodically to create glitch jumps
         function jitter(){
           layers.forEach((el, idx) => {
-            // random small offset, occasionally bigger jump
-            const big = Math.random() < 0.06 ? (Math.random() * 60 - 30) : (Math.random() * 10 - 5);
             el.style.transform = `translate3d(${(Math.random()*12-6)}px, ${(Math.random()*8-4)}px, 0) rotate(${(Math.random()*1-0.5)}deg)`;
-            el.style.opacity = 0.85 - Math.abs(Math.sin(idx + Date.now()/1000))*0.3;
-            // subtle scale/pulse:
-            el.style.filter = `blur(${Math.random() < 0.03 ? 1.2 : 0}px) saturate(${1 + (Math.random()*0.4)})`;
+            el.style.opacity = 0.7 + (Math.sin(idx + Date.now()/1000) + 1) * 0.12;
+            el.style.filter = `blur(${Math.random() < 0.03 ? 1.1 : 0}px) saturate(${1 + (Math.random()*0.35)})`;
           });
         }
-        // run jitter frequently for strong glitch; but keep CPU reasonable
+
         setInterval(jitter, 220);
         jitter();
       }
