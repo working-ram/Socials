@@ -4,19 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ram</title>
-</head>
   <style>
-    html,body{height:100%;margin:0}
-    .toplink{position:fixed;left:16px;top:12px;font-family:system-ui,Arial,sans-serif}
-    .center{min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,Arial,sans-serif;font-size:48px}
+    :root{--bg1:#071026;--bg2:#001627;--accent:#5b8cff}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef8}
+    .toplink{position:fixed;left:16px;top:12px;font-family:system-ui,Arial,sans-serif;z-index:30}
+    .toplink a{color:#cfe6ff;text-decoration:none;font-size:14px}
+    .toplink img{height:36px;vertical-align:middle;margin-right:8px;border-radius:6px}
+    .stage{position:fixed;inset:0;overflow:hidden}
+    .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:260px;height:260px;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.18), rgba(91,140,255,0.65) 20%, rgba(27,59,128,0.35) 60%, transparent 75%);
+      box-shadow:0 0 120px rgba(91,140,255,0.22),0 0 30px rgba(91,140,255,0.12) inset;filter:blur(0.4px);z-index:5;animation:pulse 4s ease-in-out infinite}
+    .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 40px rgba(91,140,255,0.06) inset;pointer-events:none}
+    .ring.r1{width:420px;height:420px;border:1px solid rgba(91,140,255,0.06);animation:spin 18s linear infinite}
+    .ring.r2{width:340px;height:340px;border:1px solid rgba(236,72,153,0.03);animation:spin 26s linear reverse infinite}
+    .center{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,Arial,sans-serif;font-size:56px}
+    .name{background:linear-gradient(90deg,#dbeafe,#c7f9ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+    @keyframes pulse{0%{transform:translate(-50%,-50%) scale(0.98)}50%{transform:translate(-50%,-50%) scale(1.03)}100%{transform:translate(-50%,-50%) scale(0.98)}}
+    @keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+    /* subtle floating nebula */
+    .nebula{position:fixed;inset:-20% -10% -20% -10%;background:radial-gradient(600px 300px at 20% 30%, rgba(91,140,255,0.08), transparent 10%),radial-gradient(500px 250px at 80% 70%, rgba(236,72,153,0.06), transparent 8%);mix-blend-mode:screen;pointer-events:none;animation:drift 12s ease-in-out infinite}
+    @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+    /* small responsive tweaks */
+    @media (max-width:520px){.core{width:180px;height:180px}.center{font-size:32px}}
   </style>
-</head>
 </head>
 <body>
   <div class="toplink">
-    <a href="https://working-ram.github.io/Socials/"><img src="https://raw.githubusercontent.com/working-ram/Socials/main/Assets/Ram_Icon.png" alt="Ram" style="height:40px;vertical-align:middle;margin-right:8px;border-radius:6px"></a>
-    <a href="https://working-ram.github.io/Socials/">https://working-ram.github.io/Socials/</a>
+    <a href="https://working-ram.github.io/Socials/"><img src="https://raw.githubusercontent.com/working-ram/Socials/main/Assets/Ram_Icon.png" alt="Ram"></a>
+    <a href="https://working-ram.github.io/Socials/">working-ram.github.io/Socials</a>
   </div>
-  <div class="center">Ram</div>
+
+  <div class="stage">
+    <div class="nebula"></div>
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="core"></div>
+  </div>
+
+  <div class="center"><span class="name">Ram</span></div>
 </body>
 </html>
