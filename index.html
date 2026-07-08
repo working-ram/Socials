@@ -36,6 +36,17 @@
     .nebula{position:fixed;inset:-20% -10% -20% -10%;background:radial-gradient(600px 300px at 20% 30%, rgba(200,200,205,0.04), transparent 10%),radial-gradient(500px 250px at 80% 70%, rgba(220,220,225,0.03), transparent 8%);mix-blend-mode:screen;pointer-events:none;animation:drift 14s ease-in-out infinite}
     @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
     @media (max-width:520px){.core{width:180px;height:180px}.center{font-size:32px}}
+    /* 3D card styles */
+    .card{position:fixed;left:36px;top:50%;transform:translateY(-50%);width:220px;height:300px;border-radius:14px;background:linear-gradient(180deg,#fbfbfc,#f3f4f6);box-shadow:0 20px 50px rgba(4,8,15,0.45);overflow:hidden;z-index:60;perspective:1000px}
+    .card-inner{width:100%;height:100%;transform-style:preserve-3d;transition:box-shadow .18s}
+    .card-img{display:block;max-width:86%;height:auto;margin:20px auto 10px;border-radius:10px;filter:drop-shadow(0 8px 18px rgba(0,0,0,0.18));transform:translateZ(18px)}
+    /* glitch overlays */
+    .card::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;background-repeat:repeat;mix-blend-mode:normal;opacity:0.08}
+    .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.06) 1px, transparent 1px);background-size:100% 6px;animation:scanline 6s linear infinite}
+    .card::after{background-image:repeating-linear-gradient(90deg,rgba(3,35,102,0.06) 0 2px, transparent 2px 10px);opacity:0.06;animation:glitchShift 3.6s linear infinite}
+    @keyframes scanline{0%{opacity:0.04;background-position:0 0}50%{opacity:0.08;background-position:0 30px}100%{opacity:0.04;background-position:0 0}}
+    @keyframes glitchShift{0%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(2px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
+    @media (max-width:520px){.card{left:14px;width:160px;height:220px}.card-img{max-width:92%;margin:14px auto}}
   </style>
 </head>
 <body>
@@ -60,5 +71,56 @@
   </div>
 
   <div class="center"><span class="name">Ram</span></div>
+  
+  <!-- Floating 3D card with character -->
+  <div class="card" id="ramCard" aria-hidden="false">
+    <div class="card-inner">
+      <img src="https://raw.githubusercontent.com/working-ram/Socials/main/Assets/Ram_Icon.png" alt="Ram" class="card-img">
+    </div>
+  </div>
+
+  <script>
+    // 3D floating card that follows the mouse — smooth lerp
+    (function(){
+      const card = document.getElementById('ramCard');
+      if(!card) return;
+      const inner = card.querySelector('.card-inner');
+      let mouseX = 0, mouseY = 0;
+      let tx = 0, ty = 0, trX = 0, trY = 0;
+      const ease = 0.12;
+
+      function onMove(e){
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) || 0;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) || 0;
+        // compute relative to viewport center
+        const nx = (x / window.innerWidth - 0.0); // prefer left bias
+        const ny = (y / window.innerHeight - 0.5);
+        mouseX = nx; mouseY = ny;
+      }
+
+      window.addEventListener('mousemove', onMove, {passive:true});
+      window.addEventListener('touchmove', onMove, {passive:true});
+
+      function raf(){
+        // target translations and rotations
+        const targetX = (mouseX - 0.0) * 28; // follow mouse horizontally, biased to left
+        const targetY = mouseY * 30;
+        const targetRotY = (mouseX - 0.0) * 8; // degrees
+        const targetRotX = -mouseY * 6;
+
+        tx += (targetX - tx) * ease;
+        ty += (targetY - ty) * ease;
+        trY += (targetRotY - trY) * ease;
+        trX += (targetRotX - trX) * ease;
+
+        // apply transforms: translate + rotate for 3D tilt
+        card.style.transform = `translateY(calc(-50% + ${ty}px)) translateX(${tx}px)`;
+        inner.style.transform = `rotateX(${trX}deg) rotateY(${trY}deg) translateZ(18px)`;
+
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+    })();
+  </script>
 </body>
 </html>
