@@ -4,15 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ram</title>
-</head>
   <style>
     :root{--bg1:#0b0b0d;--bg2:#121214;--core-1:rgba(255,255,255,0.85);--core-2:rgba(220,220,226,0.55);--accent:rgba(200,200,205,0.25)}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e9eef2}
-    .toplink{position:fixed;left:16px;top:12px;font-family:system-ui,Arial,sans-serif;z-index:30}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e9eef2;overflow-x:hidden}
+    .toplink{position:fixed;left:16px;top:12px;font-family:system-ui,Arial,sans-serif;z-index:120}
     .toplink a{color:#d9dde2;text-decoration:none;font-size:14px}
     .toplink img{height:36px;vertical-align:middle;margin-right:8px;border-radius:6px}
-    .stage{position:fixed;inset:0;overflow:hidden}
-    /* core styled to feel like protons: soft bright center with small orbiting particles */
+    .stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:5}
+
+    /* background glitch layer (stronger, behind the card) */
+    .bg-glitch{position:fixed;inset:0;z-index:20;pointer-events:none;mix-blend-mode:screen;opacity:1}
+    .bg-glitch .j-line{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;font-family:ui-monospace,monospace;font-weight:600;color:#fff;opacity:1;letter-spacing:6px;pointer-events:none;text-shadow:0 0 12px rgba(255,255,255,0.18)}
+    .bg-glitch .j-line.layer-r{mix-blend-mode:screen;filter:brightness(1.05) saturate(1.3);color:#ff6ea0;opacity:0.85;transform-origin:center}
+    .bg-glitch .j-line.layer-b{mix-blend-mode:screen;filter:brightness(1.05) saturate(1.3);color:#3aa6ff;opacity:0.85;transform-origin:center}
+    .bg-glitch .j-line.layer-w{color:#ffffff;opacity:0.96;mix-blend-mode:normal}
+
+    /* stronger background scanlines & noise */
+    .bg-scan{position:fixed;inset:0;z-index:22;pointer-events:none;background-image:linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);background-size:100% 6px;mix-blend-mode:overlay;opacity:0.06}
+
+    /* core styled to feel like protons */
     .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:260px;height:260px;border-radius:50%;
       background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.08) 10%, rgba(230,230,235,0.04) 40%, transparent 70%),
                  radial-gradient(circle at 35% 30%, var(--core-2) 0%, rgba(220,220,226,0.02) 40%, transparent 75%);
@@ -32,56 +42,25 @@
     .name{background:linear-gradient(90deg,#f6f7f8,#dfe6ea);-webkit-background-clip:text;background-clip:text;color:transparent;filter:brightness(0.98)}
     @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    /* subtle gray nebula */
-    .nebula{position:fixed;inset:-20% -10% -20% -10%;background:radial-gradient(600px 300px at 20% 30%, rgba(200,200,205,0.04), transparent 10%),radial-gradient(500px 250px at 80% 70%, rgba(220,220,225,0.03), transparent 8%);mix-blend-mode:screen;pointer-events:none;animation:drift 14s ease-in-out infinite}
-    @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
-    @media (max-width:520px){.core{width:180px;height:180px}.center{font-size:32px}}
+
     /* 3D card styles */
-    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;border-radius:20px;box-shadow:0 40px 90px rgba(0,0,0,0.28);overflow:visible;z-index:70;perspective:1700px}
-    .card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;transition:transform .08s ease-out;will-change:transform}
-    .card-back{position:absolute;inset:12px;border-radius:20px;background:radial-gradient(circle at 50% 24%, rgba(255,255,255,0.96), rgba(241,242,246,0.92) 24%, rgba(225,226,231,0.78) 60%, rgba(210,211,216,0.55) 100%);box-shadow:0 10px 32px rgba(14,18,33,0.08) inset;transform:translateZ(6px);overflow:hidden}
-    .card-back::before,.card-back::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.12}
-    .card-back::before{background:repeating-linear-gradient(90deg, rgba(2,32,90,0.14) 0 2px, transparent 2px 10px);animation:glitchShiftBack 2.8s linear infinite}
-    .card-back::after{background:linear-gradient(180deg, rgba(0,0,0,0.05), transparent 75%);opacity:0.08}
-    .card-back{position:absolute;inset:12px;border-radius:20px;background:radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 18%),radial-gradient(circle at 85% 15%, rgba(56,178,255,0.12), transparent 16%),linear-gradient(180deg, rgba(12,14,18,0.98), rgba(10,12,18,0.96));box-shadow:0 12px 34px rgba(0,0,0,0.42) inset;transform:translateZ(6px);overflow:hidden;}
-    .card-back::before,.card-back::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0.18;}
-    .card-back::before{background:repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 5px);}
-    .card-back::after{background:linear-gradient(180deg, rgba(255,32,96,0.12), transparent 25%),linear-gradient(90deg, rgba(32,168,255,0.12), transparent 15%);}
-    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0.14), transparent 24%),repeating-linear-gradient(90deg, rgba(255,255,255,0.28) 0 2px, transparent 2px 6px),repeating-linear-gradient(180deg, rgba(255,0,120,0.08) 0 1px, transparent 1px 4px),radial-gradient(circle at 15% 15%, rgba(255,255,255,0.22), transparent 22%);mix-blend-mode:screen;opacity:1;animation:glitchShiftSoft 1.9s linear infinite;}
-    .card-glitch::before,.card-glitch::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;mix-blend-mode:screen;opacity:0.32;}
-    .card-glitch::before{background:linear-gradient(90deg, rgba(255,16,88,0.45) 0 35%, transparent 35% 65%, rgba(255,16,88,0.28) 65% 100%);filter:blur(0.6px);animation:glitchRed 0.11s infinite;}
-    .card-glitch::after{background:linear-gradient(90deg, rgba(58,182,255,0.42) 0 35%, transparent 35% 65%, rgba(58,182,255,0.28) 65% 100%);filter:blur(0.6px);animation:glitchBlue 0.13s infinite;}
-    .card-text{position:absolute;inset:18px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(24px);z-index:6;opacity:1;font-family:ui-monospace,monospace;font-size:11px;line-height:1.2;letter-spacing:1.2px;color:#ffffff;text-align:center;white-space:pre-wrap;overflow:hidden;text-shadow:0 0 10px rgba(255,255,255,0.22);}
-    .card-text::before{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#ffffff;opacity:0.24;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);animation:glitchTextA 0.8s infinite alternate ease-in-out;}
-    .card-text::after{content:"境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白\A境界の白  境界の白  境界の白  境界の白  境界の白";position:absolute;inset:0;color:#ffffff;opacity:0.16;mix-blend-mode:screen;white-space:pre-wrap;transform:translateZ(0);animation:glitchTextB 0.65s infinite alternate ease-in-out;}
+    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;border-radius:20px;box-shadow:0 40px 120px rgba(0,0,0,0.48);overflow:visible;z-index:70;perspective:1700px;transition:transform .12s ease-out}
+    .card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;transition:transform .06s ease-out;will-change:transform}
+    .card-back{position:absolute;inset:12px;border-radius:20px;box-shadow:0 12px 34px rgba(0,0,0,0.42) inset;transform:translateZ(6px);overflow:hidden;background:linear-gradient(180deg, rgba(10,12,16,0.98), rgba(5,8,14,0.94));}
+    /* keep card overlays subtle — main glitch is in bg */
+    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0.06), transparent 24%),repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 6px);mix-blend-mode:screen;opacity:0.55;filter:blur(.2px)}
+    .card-text{position:absolute;inset:18px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(24px);z-index:6;opacity:1;font-family:ui-monospace,monospace;font-size:11px;line-height:1.2;letter-spacing:1.2px;color:#ffffff;text-align:center;white-space:pre-wrap;overflow:hidden;text-shadow:0 0 8px rgba(255,255,255,0.14)}
     .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none;padding:0;}
-    .card-img{display:block;width:auto;height:100%;max-width:100%;border-radius:16px;filter:drop-shadow(0 28px 64px rgba(0,0,0,0.35));transform:translateZ(46px);image-rendering:auto;object-fit:contain}
-    .card-back{background:linear-gradient(180deg, rgba(10,12,16,0.98), rgba(5,8,14,0.94)),radial-gradient(circle at 24% 12%, rgba(255,255,255,0.08), transparent 24%);}
-    .card-back::before{background:repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 8px);animation:glitchShiftBack 2.4s linear infinite;opacity:0.18;}
-    .card-back::after{background:linear-gradient(180deg, rgba(255,75,90,0.06), transparent 70%);opacity:0.16;}
-    @keyframes glitchRed{0%{transform:translate(0,0)}10%{transform:translate(2px,0)}20%{transform:translate(-2px,1px)}30%{transform:translate(1px,-1px)}40%{transform:translate(3px,0)}50%{transform:translate(-1px,2px)}60%{transform:translate(1px,-2px)}70%{transform:translate(-2px,1px)}80%{transform:translate(2px,0)}90%{transform:translate(-1px,-1px)}100%{transform:translate(0,0)}}
-    @keyframes glitchBlue{0%{transform:translate(0,0)}12%{transform:translate(-2px,1px)}24%{transform:translate(2px,-1px)}36%{transform:translate(-1px,1px)}48%{transform:translate(1px,-2px)}60%{transform:translate(-3px,0)}72%{transform:translate(2px,1px)}84%{transform:translate(-1px,-1px)}96%{transform:translate(1px,2px)}100%{transform:translate(0,0)}}
-    @keyframes glitchTextA{0%{transform:translate(0,0)}20%{transform:translate(-1px,2px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-2px,1px)}80%{transform:translate(2px,-2px)}100%{transform:translate(0,0)}}
-    @keyframes glitchTextB{0%{transform:translate(0,0)}18%{transform:translate(1px,-2px)}36%{transform:translate(-1px,1px)}54%{transform:translate(2px,0)}72%{transform:translate(-2px,2px)}90%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
-    /* outer glitch overlays for scanlines */
-    .card::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.06}
-    .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.04) 1px, transparent 1px);background-size:100% 7px;animation:scanline 5.4s linear infinite}
-    .card::after{background-image:repeating-linear-gradient(90deg,rgba(20,60,140,0.06) 0 2px, transparent 2px 10px);opacity:0.06;animation:glitchShift 3s linear infinite}
-    @keyframes scanline{0%{opacity:0.03;background-position:0 0}50%{opacity:0.07;background-position:0 26px}100%{opacity:0.03;background-position:0 0}}
-    @keyframes glitchShift{0%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(2px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
-    @keyframes glitchShiftBack{0%{background-position:0 0}25%{background-position:40px 0}50%{background-position:-18px 0}75%{background-position:12px 0}100%{background-position:0 0}}
-    @keyframes glitchShiftSoft{0%{transform:translateY(0)}20%{transform:translateY(-2px) translateX(1px)}40%{transform:translateY(1px) translateX(-1px)}60%{transform:translateY(-1px) translateX(2px)}80%{transform:translateY(0) translateX(-1px)}100%{transform:translateY(0) translateX(0)}}
+    /* image tweaks: use srcset for high-DPI, keep object-fit contain */
+    .card-img{display:block;width:auto;height:100%;max-width:100%;border-radius:12px;filter:drop-shadow(0 28px 64px rgba(0,0,0,0.35));transform:translateZ(46px);image-rendering:auto;object-fit:contain}
     @media (max-width:520px){.card{left:18px;width:200px;height:300px}.card-img{width:95%;margin:14px auto}}
 
-    .card::before,.card::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:normal;opacity:0.06}
-    .card::before{background-image:linear-gradient(90deg,rgba(10,12,20,0.04) 1px, transparent 1px);background-size:100% 7px;animation:scanline 5.4s linear infinite}
-    .card::after{background-image:repeating-linear-gradient(90deg,rgba(20,60,140,0.05) 0 2px, transparent 2px 10px);opacity:0.06;animation:glitchShift 3s linear infinite}
-    @keyframes scanline{0%{opacity:0.03;background-position:0 0}50%{opacity:0.07;background-position:0 26px}100%{opacity:0.03;background-position:0 0}}
-    @keyframes glitchShift{0%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(2px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
-    @keyframes glitchShiftBack{0%{background-position:0 0}25%{background-position:40px 0}50%{background-position:-18px 0}75%{background-position:12px 0}100%{background-position:0 0}}
-    @keyframes glitchShiftSoft{0%{transform:translateY(0)}20%{transform:translateY(-2px) translateX(1px)}40%{transform:translateY(1px) translateX(-1px)}60%{transform:translateY(-1px) translateX(2px)}80%{transform:translateY(0) translateX(-1px)}100%{transform:translateY(0) translateX(0)}}
-    @keyframes glitchText{0%{transform:translate(0,0)}20%{transform:translate(-1px,1px)}40%{transform:translate(1px,-1px)}60%{transform:translate(-1px,-1px)}80%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
-    @media (max-width:520px){.card{left:18px;width:180px;height:260px}.card-img{width:95%;margin:14px auto}}
+    /* background / outer overlays */
+    .bg-strong-noise{position:fixed;inset:0;z-index:21;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.02) 0 1px, transparent 2px);opacity:0.025;mix-blend-mode:overlay}
+    .bg-glitch .j-line{transition:transform .25s cubic-bezier(.2,.9,.2,1),opacity .25s linear}
+
+    /* small responsive tweaks */
+    @media (max-width:520px){.card{left:12px;width:170px;height:260px}}
   </style>
 </head>
 <body>
@@ -106,58 +85,144 @@
   </div>
 
   <div class="center"><span class="name">Ram</span></div>
-  
+
+  <!-- glitch background: Japanese text layers (white + RGB splits) -->
+  <div class="bg-glitch" id="bgGlitch" aria-hidden="true"></div>
+  <div class="bg-scan" aria-hidden="true"></div>
+  <div class="bg-strong-noise" aria-hidden="true"></div>
+
   <!-- Floating 3D card with character -->
   <div class="card" id="ramCard" aria-hidden="false">
     <div class="card-inner">
       <div class="card-back"></div>
       <div class="card-glitch"></div>
-      <div class="card-text"></div>
+      <div class="card-text" aria-hidden="true">RAM</div>
       <div class="card-front">
-        <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img">
+        <!-- add high-res fallbacks: supply Assets/Ram_Art_Transparent@2x.png and @3x if available -->
+        <img src="Assets/Ram_Art_Transparent.png"
+             srcset="Assets/Ram_Art_Transparent@2x.png 2x, Assets/Ram_Art_Transparent@3x.png 3x"
+             alt="Ram" class="card-img" decoding="async" loading="lazy">
       </div>
     </div>
   </div>
 
   <script>
-    // 3D floating card that follows the mouse — smooth lerp
+    // Fix card rotation and implement stronger background glitch text.
     (function(){
       const card = document.getElementById('ramCard');
-      if(!card) return;
-      const inner = card.querySelector('.card-inner');
-      let mouseX = 0, mouseY = 0;
-      let trX = 0, trY = 0;
-      const ease = 0.12;
+      const inner = card && card.querySelector('.card-inner');
+      if(!card || !inner) return;
 
+      // Rotation state
+      let mouseX = 0, mouseY = 0;
+      let trX = 0, trY = 0, trZ = 0;
+      const ease = 0.14;
+      const maxYDeg = 28; // yaw (rotateY)
+      const maxXDeg = 22; // pitch (rotateX)
+      const maxZDeg = 3.6; // small roll
+
+      // Use viewport normalization (so card orientation follows mouse position across page;
+      // also fixes inverted sign so card 'looks at' the pointer)
       function onMove(e){
-        const x = (e.clientX || (e.touches && e.touches[0].clientX)) || 0;
-        const y = (e.clientY || (e.touches && e.touches[0].clientY)) || 0;
-        const rect = card.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const nx = (x - centerX) / (rect.width / 2);
-        const ny = (y - centerY) / (rect.height / 2);
+        const x = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
+        const y = (e.clientY !== undefined) ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY) || 0;
+
+        // Normalize relative to viewport center so gestures anywhere behave predictably:
+        const nx = (x - window.innerWidth / 2) / (window.innerWidth / 2); // -1..1
+        const ny = (y - window.innerHeight / 2) / (window.innerHeight / 2); // -1..1
+
+        // clamp
         mouseX = Math.max(-1, Math.min(1, nx));
         mouseY = Math.max(-1, Math.min(1, ny));
       }
 
+      // mouse listeners
       window.addEventListener('mousemove', onMove, {passive:true});
       window.addEventListener('touchmove', onMove, {passive:true});
 
+      // animation frame
       function raf(){
-        const targetRotY = -mouseX * 28;
-        const targetRotX = mouseY * 22;
-        const targetRotZ = mouseX * 2.4;
+        // map normalized pointer to rotations — positive X (right) -> positive rotateY (turn right)
+        const targetRotY = mouseX * maxYDeg;
+        // positive Y (down) -> negative rotateX (tilt forward) so card faces pointer vertically
+        const targetRotX = -mouseY * maxXDeg;
+        const targetRotZ = mouseX * maxZDeg * 0.6;
 
         trY += (targetRotY - trY) * ease;
         trX += (targetRotX - trX) * ease;
+        trZ += (targetRotZ - trZ) * ease;
 
-        card.style.transform = 'translateY(-50%)';
-        inner.style.transform = `rotateX(${trX}deg) rotateY(${trY}deg) rotateZ(${targetRotZ}deg)`;
+        // small parallax translation so card moves slightly toward pointer
+        const tx = mouseX * 8; // px
+        const ty = mouseY * 10; // px
+
+        // apply transforms: translate then rotate inner (preserve 3d)
+        card.style.transform = `translateY(calc(-50% + ${ty}px)) translateX(${tx}px)`;
+        inner.style.transform = `rotateX(${trX.toFixed(3)}deg) rotateY(${trY.toFixed(3)}deg) rotateZ(${trZ.toFixed(3)}deg)`;
 
         requestAnimationFrame(raf);
       }
       requestAnimationFrame(raf);
+
+      // --- background glitch text generator ---
+      const BG = document.getElementById('bgGlitch');
+      if(BG){
+        const TEXT = '境界の白  境界の白  境界の白  境界の白  境界の白';
+        const layers = [];
+        const count = 10; // number of lines across the screen
+        // create three layered variants per line (white, red-shift, blue-shift) for RGB split
+        for(let i=0;i<count;i++){
+          // base white line
+          const w = document.createElement('div');
+          w.className = 'j-line layer-w';
+          w.style.fontSize = `${22 + (i % 3) * 6}px`;
+          w.style.top = `${(i / (count - 1)) * 120}%`; // cover beyond viewport for randomness
+          w.style.left = `${10 + (i * 7) % 40}%`;
+          w.style.opacity = 0.9;
+          w.textContent = TEXT.repeat(4);
+          BG.appendChild(w);
+          layers.push(w);
+
+          // red offset (slightly offset x)
+          const r = w.cloneNode(true);
+          r.className = 'j-line layer-r';
+          r.style.left = `calc(${w.style.left} - 6px)`;
+          r.style.opacity = 0.7;
+          BG.appendChild(r);
+          layers.push(r);
+
+          // blue offset (opposite)
+          const b = w.cloneNode(true);
+          b.className = 'j-line layer-b';
+          b.style.left = `calc(${w.style.left} + 6px)`;
+          b.style.opacity = 0.7;
+          BG.appendChild(b);
+          layers.push(b);
+        }
+
+        // animate randomized jitter positions periodically to create glitch jumps
+        function jitter(){
+          layers.forEach((el, idx) => {
+            // random small offset, occasionally bigger jump
+            const big = Math.random() < 0.06 ? (Math.random() * 60 - 30) : (Math.random() * 10 - 5);
+            el.style.transform = `translate3d(${(Math.random()*12-6)}px, ${(Math.random()*8-4)}px, 0) rotate(${(Math.random()*1-0.5)}deg)`;
+            el.style.opacity = 0.85 - Math.abs(Math.sin(idx + Date.now()/1000))*0.3;
+            // subtle scale/pulse:
+            el.style.filter = `blur(${Math.random() < 0.03 ? 1.2 : 0}px) saturate(${1 + (Math.random()*0.4)})`;
+          });
+        }
+        // run jitter frequently for strong glitch; but keep CPU reasonable
+        setInterval(jitter, 220);
+        jitter();
+      }
+
+      // optional: reduce card overlay intensity on smaller screens
+      function handleResize(){
+        if(window.innerWidth < 520){
+          card.style.transform = 'translateY(-50%) translateX(0)';
+        }
+      }
+      window.addEventListener('resize', handleResize, {passive:true});
     })();
   </script>
 </body>
