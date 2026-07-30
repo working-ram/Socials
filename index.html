@@ -12,6 +12,7 @@
       --core-2:rgba(220,220,226,0.55);
     }
     *{box-sizing:border-box}
+    html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
     html,body{height:100%;margin:0;background:#000;color:var(--white);overflow-x:hidden;font-family:system-ui,Arial,sans-serif}
 
     /* ---------- background video ---------- */
@@ -82,13 +83,18 @@
     .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 20px rgba(255,255,255,0.02) inset;pointer-events:none}
     .ring.r1{width:420px;height:420px;border:1px solid rgba(255,255,255,0.05)}
     .ring.r2{width:340px;height:340px;border:1px solid rgba(255,255,255,0.03)}
-    .center{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;font-size:56px}
+    /* ---------- scroll-snap sections ---------- */
+    .sections{position:relative;z-index:10}
+    .snap-section{min-height:100vh;scroll-snap-align:start;scroll-snap-stop:always;
+      display:flex;align-items:center;justify-content:center;position:relative}
+
+    .center{position:relative;z-index:10;font-size:56px}
     .name{background:linear-gradient(90deg,#f6f7f8,#dfe6ea);-webkit-background-clip:text;background-clip:text;color:transparent;filter:brightness(0.98);letter-spacing:2px}
     @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
     /* ---------- static card: plain vertical rectangle, white border, blurred backdrop ---------- */
-    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
+    .card{position:absolute;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
       overflow:hidden;z-index:70;pointer-events:none;
       border:2px solid rgba(255,255,255,0.9);
       background:rgba(8,8,10,0.6);
@@ -100,11 +106,33 @@
         left:50%;top:76px;transform:translateX(-50%);
         width:56vw;max-width:230px;height:34vh;max-height:290px;
       }
+      #heroSection{align-items:flex-start}
       .center{
-        min-height:0;align-items:flex-start;justify-content:center;
-        padding-top:calc(76px + 34vh + 28px);
+        margin-top:calc(76px + 34vh + 28px);
         font-size:clamp(26px,7vw,34px);text-align:center;padding-left:16px;padding-right:16px;
       }
+    }
+
+    /* ---------- discord card (second slide) ---------- */
+    .discord-card{
+      display:flex;align-items:center;gap:22px;
+      border:2px solid rgba(255,255,255,0.9);
+      background:rgba(8,8,10,0.6);
+      padding:26px 34px;max-width:min(86vw,420px);
+      box-shadow:0 30px 80px rgba(0,0,0,0.5)}
+    .discord-avatar{width:88px;height:88px;min-width:88px;border-radius:50%;object-fit:cover;
+      border:2px solid rgba(255,255,255,0.7);background:rgba(255,255,255,0.05)}
+    .discord-info{display:flex;flex-direction:column;gap:8px;font-family:ui-monospace,monospace;min-width:0}
+    .discord-username{font-size:19px;letter-spacing:1px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .discord-status{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray)}
+    .status-dot{width:9px;height:9px;min-width:9px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
+    .status-dot.online{background:#3ba55c;color:#3ba55c}
+    .status-dot.idle{background:#faa61a;color:#faa61a}
+    .status-dot.dnd{background:#ed4245;color:#ed4245}
+    .status-dot.offline{background:#80848e;color:#80848e}
+    @media (max-width:520px){
+      .discord-card{flex-direction:column;text-align:center;padding:24px}
+      .discord-username{white-space:normal}
     }
 
     .bg-strong-noise{position:fixed;inset:0;z-index:21;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.02) 0 1px, transparent 2px);opacity:0.025;mix-blend-mode:overlay}
@@ -153,13 +181,27 @@
     </div>
   </div>
 
-  <div class="center"><span class="name">Working Ram</span></div>
+  <div class="sections">
+    <section class="snap-section" id="heroSection">
+      <div class="center"><span class="name">Working Ram</span></div>
 
-  <!-- static character card -->
-  <div class="card" id="ramCard" aria-hidden="false">
-    <div class="card-front">
-      <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img" decoding="async" loading="lazy">
-    </div>
+      <!-- static character card -->
+      <div class="card" id="ramCard" aria-hidden="false">
+        <div class="card-front">
+          <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img" decoding="async" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+    <section class="snap-section" id="discordSection">
+      <div class="discord-card">
+        <img class="discord-avatar" id="discordAvatar" src="" alt="Avatar de Discord">
+        <div class="discord-info">
+          <div class="discord-username" id="discordUsername">Cargando...</div>
+          <div class="discord-status"><span class="status-dot offline" id="statusDot"></span><span id="discordStatusText">—</span></div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <div class="bg-scan"></div>
@@ -174,8 +216,6 @@
       const videoWrap = document.getElementById('videoWrap');
       const videoOverlay = document.getElementById('videoOverlay');
 
-      // Diagnóstico: si el video no carga, esto va a avisar en la consola (F12)
-      // por qué (archivo no encontrado, formato no soportado, etc).
       video.addEventListener('error', function(){
         const err = video.error;
         console.error('[bgVideo] no se pudo cargar. Revisá que "Assets/just a freak.mp4" exista con ese nombre EXACTO (mayúsculas/minúsculas incluidas).', err);
@@ -196,6 +236,39 @@
         videoWrap.classList.add('on');
         videoOverlay.classList.add('on');
       }, {once:true});
+
+      const DISCORD_ID = '781172416218136577';
+
+      const discordAvatar = document.getElementById('discordAvatar');
+      const discordUsername = document.getElementById('discordUsername');
+      const statusDot = document.getElementById('statusDot');
+      const discordStatusText = document.getElementById('discordStatusText');
+
+      const STATUS_LABELS = {online:'En línea', idle:'Ausente', dnd:'No molestar', offline:'Desconectado'};
+
+      async function updateDiscordCard(){
+        if(!DISCORD_ID || DISCORD_ID === 'TU_ID_DE_DISCORD_ACA') return;
+        try{
+          const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+          const json = await res.json();
+          if(!json.success) return;
+          const d = json.data;
+
+          discordAvatar.src = `https://api.lanyard.rest/${DISCORD_ID}.png`;
+          discordUsername.textContent = '@' + d.discord_user.username;
+
+          statusDot.className = 'status-dot ' + (d.discord_status || 'offline');
+
+          const customStatus = (d.activities || []).find(a => a.type === 4);
+          discordStatusText.textContent = (customStatus && customStatus.state)
+            ? customStatus.state
+            : (STATUS_LABELS[d.discord_status] || d.discord_status);
+        }catch(e){
+          console.error('[lanyard] no se pudo obtener el estado de Discord:', e);
+        }
+      }
+      updateDiscordCard();
+      setInterval(updateDiscordCard, 20000);
 
     })();
   </script>
