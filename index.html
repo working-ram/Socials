@@ -17,12 +17,12 @@
     /* ---------- background video ---------- */
     .video-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,var(--bg1),var(--bg2))}
     #bgVideo{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;
-      transform:translate(-50%,-50%) scale(1.12);filter:blur(7px) brightness(0.55) saturate(0.9) grayscale(0.15);
-      opacity:0;transition:opacity 1.4s ease;object-fit:cover}
+      transform:translate(-50%,-50%) scale(1.08);filter:blur(4px) brightness(0.75) saturate(0.95);
+      opacity:0;transition:opacity 1.2s ease;object-fit:cover}
     .video-wrap.on #bgVideo{opacity:1}
     .video-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
-      background:radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 68%, rgba(0,0,0,0.88) 100%);
-      opacity:0;transition:opacity 1.4s ease}
+      background:radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 68%, rgba(0,0,0,0.7) 100%);
+      opacity:0;transition:opacity 1.2s ease}
     .video-overlay.on{opacity:1}
 
     /* ---------- intro / start screen ---------- */
@@ -52,22 +52,6 @@
 
     .stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:5}
 
-    /* ---------- big background japanese glitch (pure CSS animation, no JS loop) ---------- */
-    @keyframes glitchJitter{
-      0%,100%{transform:translate3d(0,0,0);opacity:.85}
-      20%{transform:translate3d(-6px,1px,0);opacity:.5}
-      40%{transform:translate3d(4px,-2px,0);opacity:.9}
-      60%{transform:translate3d(-3px,2px,0);opacity:.6}
-      80%{transform:translate3d(6px,-1px,0);opacity:.95}
-    }
-    .bg-glitch{position:fixed;inset:0;z-index:6;pointer-events:none;mix-blend-mode:screen;overflow:hidden}
-    .bg-glitch .j-line{position:absolute;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",ui-monospace,monospace;
-      font-weight:700;color:#fff;letter-spacing:10px;pointer-events:none;text-shadow:0 0 18px rgba(255,255,255,0.15);
-      will-change:transform,opacity;animation:glitchJitter 2.4s steps(6) infinite}
-    .bg-glitch .j-line.layer-r{color:var(--accent-r);filter:brightness(1.1) saturate(1.3);opacity:.55;animation-delay:-.15s}
-    .bg-glitch .j-line.layer-b{color:var(--accent-b);filter:brightness(1.1) saturate(1.3);opacity:.55;animation-delay:.15s}
-    .bg-glitch .j-line.layer-w{color:#fff;opacity:.85;mix-blend-mode:normal}
-
     .bg-scan{position:fixed;inset:0;z-index:22;pointer-events:none;
       background-image:linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
       background-size:100% 6px;mix-blend-mode:overlay;opacity:0.06}
@@ -92,8 +76,19 @@
     @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-    /* ---------- static character (transparent png) with glitch behind it ---------- */
-    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;z-index:70;pointer-events:none}
+    /* ---------- static card, glitch confined behind the character ---------- */
+    @keyframes glitchJitter{
+      0%,100%{transform:translate3d(0,0,0);opacity:.85}
+      20%{transform:translate3d(-6px,1px,0);opacity:.5}
+      40%{transform:translate3d(4px,-2px,0);opacity:.9}
+      60%{transform:translate3d(-3px,2px,0);opacity:.6}
+      80%{transform:translate3d(6px,-1px,0);opacity:.95}
+    }
+    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
+      border-radius:18px;overflow:hidden;z-index:70;pointer-events:none;
+      border:1px solid rgba(255,255,255,0.14);
+      background:linear-gradient(180deg, rgba(16,17,20,0.55), rgba(6,7,9,0.75));
+      box-shadow:0 30px 80px rgba(0,0,0,0.5), inset 0 0 50px rgba(0,0,0,0.35)}
     .card-glitch{position:absolute;inset:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
     .card-glitch .j-line{position:absolute;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",ui-monospace,monospace;font-weight:700;color:#fff;letter-spacing:2px;pointer-events:none;text-shadow:0 0 8px rgba(255,255,255,0.14);will-change:transform,opacity;animation:glitchJitter 1.8s steps(6) infinite}
     .card-glitch .j-line.layer-r{color:var(--accent-r);opacity:0.7;animation-delay:-.1s}
@@ -130,7 +125,6 @@
   </div>
 
   <div class="stage">
-    <div class="bg-glitch" id="bgGlitch"></div>
     <div class="ring r1"></div>
     <div class="ring r2"></div>
     <div class="core">
@@ -166,14 +160,24 @@
       const videoWrap = document.getElementById('videoWrap');
       const videoOverlay = document.getElementById('videoOverlay');
 
+      // Diagnóstico: si el video no carga, esto va a avisar en la consola (F12)
+      // por qué (archivo no encontrado, formato no soportado, etc).
+      video.addEventListener('error', function(){
+        const err = video.error;
+        console.error('[bgVideo] no se pudo cargar. Revisá que "Assets/just a freak.mp4" exista con ese nombre EXACTO (mayúsculas/minúsculas incluidas).', err);
+      });
+      video.addEventListener('loadeddata', function(){
+        console.log('[bgVideo] cargó correctamente.');
+      });
+
       startBtn.addEventListener('click', function(){
         intro.classList.add('hidden');
         video.muted = false;
         video.volume = 0.4;
-        video.play().catch(function(){
-          // autoplay with sound blocked: fall back to muted playback
+        video.play().catch(function(e){
+          console.warn('[bgVideo] play() con audio fue bloqueado por el navegador, reintentando muteado:', e);
           video.muted = true;
-          video.play();
+          video.play().catch(function(e2){ console.error('[bgVideo] tampoco pudo reproducir muteado:', e2); });
         });
         videoWrap.classList.add('on');
         videoOverlay.classList.add('on');
@@ -210,36 +214,6 @@
         cardGlitch.appendChild(frag);
       }
 
-      /* ---------- big background glitch (japanese) — built once, animated via CSS only ---------- */
-      const bgGlitch = document.getElementById('bgGlitch');
-      if(bgGlitch){
-        const BTEXT = 'ラム';
-        const rows = 5;
-        const frag = document.createDocumentFragment();
-        for(let i=0;i<rows;i++){
-          const topPct = 8 + i * (84 / (rows - 1));
-          const size = 34 + (i % 3) * 22;
-          const leftPct = -10 + (i * 13) % 60;
-          const delay = -(i * 0.45).toFixed(2) + 's';
-
-          const w = document.createElement('div');
-          w.className = 'j-line layer-w';
-          w.style.cssText = `font-size:${size}px;top:${topPct}%;left:${leftPct}%;animation-delay:${delay}`;
-          w.textContent = (BTEXT + '   ').repeat(6);
-          frag.appendChild(w);
-
-          const r = w.cloneNode(true);
-          r.className = 'j-line layer-r';
-          r.style.animationDelay = delay;
-          frag.appendChild(r);
-
-          const b = w.cloneNode(true);
-          b.className = 'j-line layer-b';
-          b.style.animationDelay = delay;
-          frag.appendChild(b);
-        }
-        bgGlitch.appendChild(frag);
-      }
     })();
   </script>
 </body>
