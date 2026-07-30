@@ -95,7 +95,17 @@
       box-shadow:0 30px 80px rgba(0,0,0,0.5)}
     .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
     .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
-    @media (max-width:520px){.card{left:18px;width:200px;height:300px}}
+    @media (max-width:640px){
+      .card{
+        left:50%;top:76px;transform:translateX(-50%);
+        width:56vw;max-width:230px;height:34vh;max-height:290px;
+      }
+      .center{
+        min-height:0;align-items:flex-start;justify-content:center;
+        padding-top:calc(76px + 34vh + 28px);
+        font-size:clamp(26px,7vw,34px);text-align:center;padding-left:16px;padding-right:16px;
+      }
+    }
 
     .bg-strong-noise{position:fixed;inset:0;z-index:21;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.02) 0 1px, transparent 2px);opacity:0.025;mix-blend-mode:overlay}
   </style>
