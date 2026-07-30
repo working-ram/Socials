@@ -97,7 +97,9 @@
     .card{position:absolute;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
       overflow:hidden;z-index:70;pointer-events:none;
       border:2px solid rgba(255,255,255,0.9);
-      background:rgba(8,8,10,0.6);
+      background:rgba(8,8,10,0.55);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
       box-shadow:0 30px 80px rgba(0,0,0,0.5)}
     .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
     .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
@@ -182,6 +184,7 @@
   </div>
 
   <div class="sections">
+    <!-- PARTE 1: hero -->
     <section class="snap-section" id="heroSection">
       <div class="center"><span class="name">Working Ram</span></div>
 
@@ -193,6 +196,7 @@
       </div>
     </section>
 
+    <!-- PARTE 2: discord (se actualiza solo via Lanyard API) -->
     <section class="snap-section" id="discordSection">
       <div class="discord-card">
         <img class="discord-avatar" id="discordAvatar" src="" alt="Avatar de Discord">
@@ -216,6 +220,8 @@
       const videoWrap = document.getElementById('videoWrap');
       const videoOverlay = document.getElementById('videoOverlay');
 
+      // Diagnóstico: si el video no carga, esto va a avisar en la consola (F12)
+      // por qué (archivo no encontrado, formato no soportado, etc).
       video.addEventListener('error', function(){
         const err = video.error;
         console.error('[bgVideo] no se pudo cargar. Revisá que "Assets/just a freak.mp4" exista con ese nombre EXACTO (mayúsculas/minúsculas incluidas).', err);
@@ -227,7 +233,7 @@
       startBtn.addEventListener('click', function(){
         intro.classList.add('hidden');
         video.muted = false;
-        video.volume = 0.4;
+        video.volume = 0.2;
         video.play().catch(function(e){
           console.warn('[bgVideo] play() con audio fue bloqueado por el navegador, reintentando muteado:', e);
           video.muted = true;
@@ -237,7 +243,10 @@
         videoOverlay.classList.add('on');
       }, {once:true});
 
-      const DISCORD_ID = '781172416218136577';
+      /* ---------- discord presence, en vivo via Lanyard API ---------- */
+      // 1) Unite a https://discord.gg/lanyard (solo una vez, con tu cuenta de Discord)
+      // 2) Poné acá tu ID de usuario de Discord (Modo desarrollador -> clic derecho en tu perfil -> Copiar ID)
+      const DISCORD_ID = 'TU_ID_DE_DISCORD_ACA';
 
       const discordAvatar = document.getElementById('discordAvatar');
       const discordUsername = document.getElementById('discordUsername');
@@ -269,6 +278,39 @@
       }
       updateDiscordCard();
       setInterval(updateDiscordCard, 20000);
+
+      /* ---------- un solo deslize = cambia de sección entera ---------- */
+      const sections = Array.from(document.querySelectorAll('.snap-section'));
+      let currentIndex = 0;
+      let isAnimating = false;
+
+      function goToSection(index){
+        index = Math.max(0, Math.min(sections.length - 1, index));
+        if(index === currentIndex || isAnimating) return;
+        isAnimating = true;
+        currentIndex = index;
+        sections[index].scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(function(){ isAnimating = false; }, 700);
+      }
+
+      window.addEventListener('wheel', function(e){
+        if(isAnimating){ e.preventDefault(); return; }
+        if(Math.abs(e.deltaY) < 4) return;
+        e.preventDefault();
+        goToSection(currentIndex + (e.deltaY > 0 ? 1 : -1));
+      }, {passive:false});
+
+      let touchStartY = null;
+      window.addEventListener('touchstart', function(e){
+        touchStartY = e.touches[0].clientY;
+      }, {passive:true});
+      window.addEventListener('touchend', function(e){
+        if(touchStartY === null || isAnimating) return;
+        const deltaY = touchStartY - e.changedTouches[0].clientY;
+        touchStartY = null;
+        if(Math.abs(deltaY) < 40) return;
+        goToSection(currentIndex + (deltaY > 0 ? 1 : -1));
+      }, {passive:true});
 
     })();
   </script>
