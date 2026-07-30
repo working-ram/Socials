@@ -76,24 +76,14 @@
     @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-    /* ---------- static card, glitch confined behind the character ---------- */
-    @keyframes glitchJitter{
-      0%,100%{transform:translate3d(0,0,0);opacity:.85}
-      20%{transform:translate3d(-6px,1px,0);opacity:.5}
-      40%{transform:translate3d(4px,-2px,0);opacity:.9}
-      60%{transform:translate3d(-3px,2px,0);opacity:.6}
-      80%{transform:translate3d(6px,-1px,0);opacity:.95}
-    }
+    /* ---------- static card: plain vertical rectangle, white border, blurred backdrop ---------- */
     .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
-      border-radius:18px;overflow:hidden;z-index:70;pointer-events:none;
-      border:1px solid rgba(255,255,255,0.14);
-      background:linear-gradient(180deg, rgba(16,17,20,0.55), rgba(6,7,9,0.75));
-      box-shadow:0 30px 80px rgba(0,0,0,0.5), inset 0 0 50px rgba(0,0,0,0.35)}
-    .card-glitch{position:absolute;inset:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
-    .card-glitch .j-line{position:absolute;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",ui-monospace,monospace;font-weight:700;color:#fff;letter-spacing:2px;pointer-events:none;text-shadow:0 0 8px rgba(255,255,255,0.14);will-change:transform,opacity;animation:glitchJitter 1.8s steps(6) infinite}
-    .card-glitch .j-line.layer-r{color:var(--accent-r);opacity:0.7;animation-delay:-.1s}
-    .card-glitch .j-line.layer-b{color:var(--accent-b);opacity:0.7;animation-delay:.1s}
-    .card-glitch .j-line.layer-w{color:#ffffff;opacity:0.9}
+      overflow:hidden;z-index:70;pointer-events:none;
+      border:2px solid rgba(255,255,255,0.9);
+      background:rgba(10,10,12,0.35);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      box-shadow:0 30px 80px rgba(0,0,0,0.5)}
     .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
     .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
     @media (max-width:520px){.card{left:18px;width:200px;height:300px}}
@@ -140,9 +130,8 @@
 
   <div class="center"><span class="name">Working Ram</span></div>
 
-  <!-- static character, glitch text sits behind the transparent png -->
+  <!-- static character card -->
   <div class="card" id="ramCard" aria-hidden="false">
-    <div class="card-glitch" id="cardGlitch" aria-hidden="true"></div>
     <div class="card-front">
       <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img" decoding="async" loading="lazy">
     </div>
@@ -182,37 +171,6 @@
         videoWrap.classList.add('on');
         videoOverlay.classList.add('on');
       }, {once:true});
-
-      /* ---------- static character: build glitch text once, animate via CSS only ---------- */
-      const cardGlitch = document.getElementById('cardGlitch');
-      if(cardGlitch){
-        const TEXT = 'ラム ラム ラム';
-        const count = 4;
-        const frag = document.createDocumentFragment();
-        for(let i=0;i<count;i++){
-          const leftPct = 4 + (i * 9) % 40;
-          const topPct = (i / Math.max(count - 1, 1)) * 100;
-          const fontSize = 12 + (i % 3) * 4;
-          const delay = -(i * 0.3).toFixed(2) + 's';
-
-          const w = document.createElement('div');
-          w.className = 'j-line layer-w';
-          w.style.cssText = `font-size:${fontSize}px;top:${topPct}%;left:${leftPct}%;animation-delay:${delay}`;
-          w.textContent = TEXT;
-          frag.appendChild(w);
-
-          const r = w.cloneNode(true);
-          r.className = 'j-line layer-r';
-          r.style.cssText = w.style.cssText + `;left:${leftPct - 1}%;animation-delay:${delay}`;
-          frag.appendChild(r);
-
-          const b = w.cloneNode(true);
-          b.className = 'j-line layer-b';
-          b.style.cssText = w.style.cssText + `;left:${leftPct + 1}%;animation-delay:${delay}`;
-          frag.appendChild(b);
-        }
-        cardGlitch.appendChild(frag);
-      }
 
     })();
   </script>
