@@ -17,7 +17,7 @@
     /* ---------- background video ---------- */
     .video-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,var(--bg1),var(--bg2))}
     #bgVideo{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;
-      transform:translate(-50%,-50%) scale(1.03);filter:blur(3px) brightness(0.75);
+      transform:translate(-50%,-50%) scale(1.02);filter:blur(2px) brightness(0.75);
       opacity:0;transition:opacity 1.2s ease;object-fit:cover}
     .video-wrap.on #bgVideo{opacity:1}
     .video-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
@@ -50,6 +50,17 @@
     .toplink a{color:#d9dde2;text-decoration:none;font-size:13px;letter-spacing:1px;font-family:ui-monospace,monospace}
     .toplink img{height:34px;vertical-align:middle;margin-right:8px;border-radius:6px}
 
+    /* ---------- social buttons ---------- */
+    .socials{position:fixed;left:16px;bottom:16px;z-index:120;display:flex;gap:10px;flex-wrap:wrap;max-width:calc(100vw - 32px)}
+    .social-btn{
+      font-family:ui-monospace,monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+      color:var(--white);text-decoration:none;border:1px solid rgba(230,230,235,0.35);
+      padding:10px 16px;background:rgba(255,255,255,0.02);
+      transition:letter-spacing .3s ease,background .3s ease,border-color .3s ease;
+    }
+    .social-btn:hover{letter-spacing:3px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.7)}
+    @media (max-width:520px){.socials{bottom:10px;left:10px}.social-btn{padding:8px 12px;font-size:10px}}
+
     .stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:5}
 
     .bg-scan{position:fixed;inset:0;z-index:22;pointer-events:none;
@@ -80,9 +91,7 @@
     .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
       overflow:hidden;z-index:70;pointer-events:none;
       border:2px solid rgba(255,255,255,0.9);
-      background:rgba(10,10,12,0.35);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
+      background:rgba(8,8,10,0.6);
       box-shadow:0 30px 80px rgba(0,0,0,0.5)}
     .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
     .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
@@ -112,6 +121,12 @@
   <div class="toplink">
     <a href="https://working-ram.github.io/Socials/"><img src="Assets/Ram_Icon.png" alt="Ram"></a>
     <a href="https://working-ram.github.io/Socials/">Working Ram</a>
+  </div>
+
+  <div class="socials">
+    <a class="social-btn" href="https://www.roblox.com/users/1307480512/profile" target="_blank" rel="noopener noreferrer">Roblox</a>
+    <a class="social-btn" href="https://www.tiktok.com/@lider_ram" target="_blank" rel="noopener noreferrer">TikTok</a>
+    <a class="social-btn" href="https://www.youtube.com/channel/UCKB0qujr2UYf0vBLeFjNpPg" target="_blank" rel="noopener noreferrer">YouTube</a>
   </div>
 
   <div class="stage">
