@@ -52,12 +52,20 @@
 
     .stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:5}
 
-    /* ---------- big background japanese glitch ---------- */
+    /* ---------- big background japanese glitch (pure CSS animation, no JS loop) ---------- */
+    @keyframes glitchJitter{
+      0%,100%{transform:translate3d(0,0,0);opacity:.85}
+      20%{transform:translate3d(-6px,1px,0);opacity:.5}
+      40%{transform:translate3d(4px,-2px,0);opacity:.9}
+      60%{transform:translate3d(-3px,2px,0);opacity:.6}
+      80%{transform:translate3d(6px,-1px,0);opacity:.95}
+    }
     .bg-glitch{position:fixed;inset:0;z-index:6;pointer-events:none;mix-blend-mode:screen;overflow:hidden}
     .bg-glitch .j-line{position:absolute;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",ui-monospace,monospace;
-      font-weight:700;color:#fff;letter-spacing:10px;pointer-events:none;text-shadow:0 0 18px rgba(255,255,255,0.15)}
-    .bg-glitch .j-line.layer-r{color:var(--accent-r);filter:brightness(1.1) saturate(1.3);opacity:.55}
-    .bg-glitch .j-line.layer-b{color:var(--accent-b);filter:brightness(1.1) saturate(1.3);opacity:.55}
+      font-weight:700;color:#fff;letter-spacing:10px;pointer-events:none;text-shadow:0 0 18px rgba(255,255,255,0.15);
+      will-change:transform,opacity;animation:glitchJitter 2.4s steps(6) infinite}
+    .bg-glitch .j-line.layer-r{color:var(--accent-r);filter:brightness(1.1) saturate(1.3);opacity:.55;animation-delay:-.15s}
+    .bg-glitch .j-line.layer-b{color:var(--accent-b);filter:brightness(1.1) saturate(1.3);opacity:.55;animation-delay:.15s}
     .bg-glitch .j-line.layer-w{color:#fff;opacity:.85;mix-blend-mode:normal}
 
     .bg-scan{position:fixed;inset:0;z-index:22;pointer-events:none;
@@ -84,24 +92,18 @@
     @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-    /* ---------- 3D card ---------- */
-    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;border-radius:20px;box-shadow:0 40px 120px rgba(0,0,0,0.48);overflow:visible;z-index:70;perspective:1700px;transition:transform .12s ease-out}
-    .card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform-origin:center center;transition:transform .06s ease-out;will-change:transform}
-    .card-back{position:absolute;inset:12px;border-radius:20px;box-shadow:0 12px 34px rgba(0,0,0,0.42) inset;transform:translateZ(6px);overflow:hidden;background:linear-gradient(180deg, rgba(10,12,16,0.98), rgba(5,8,14,0.94));}
-    .card-glitch{position:absolute;inset:16px;border-radius:16px;transform:translateZ(18px);pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0.06), transparent 24%),repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 6px);mix-blend-mode:screen;opacity:0.55;filter:blur(.2px);overflow:hidden}
-    .card-glitch .j-line{position:absolute;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",ui-monospace,monospace;font-weight:700;color:#fff;letter-spacing:2px;pointer-events:none;text-shadow:0 0 8px rgba(255,255,255,0.14)}
-    .card-glitch .j-line.layer-r{mix-blend-mode:screen;filter:brightness(1.05) saturate(1.3);color:var(--accent-r);opacity:0.7;transform-origin:center}
-    .card-glitch .j-line.layer-b{mix-blend-mode:screen;filter:brightness(1.05) saturate(1.3);color:var(--accent-b);opacity:0.7;transform-origin:center}
-    .card-glitch .j-line.layer-w{color:#ffffff;opacity:0.95;mix-blend-mode:normal}
-    .card-glitch .j-line{transition:transform .25s cubic-bezier(.2,.9,.2,1),opacity .25s linear}
-    .card-text{position:absolute;inset:18px;pointer-events:none;display:flex;align-items:center;justify-content:center;transform:translateZ(24px);z-index:6;opacity:1;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",ui-monospace,monospace;font-size:13px;line-height:1.2;letter-spacing:1.2px;color:#ffffff;text-align:center;white-space:pre-wrap;overflow:hidden;text-shadow:0 0 8px rgba(255,255,255,0.14)}
-    .card-front{position:absolute;inset:12px;border-radius:20px;background:transparent;display:flex;align-items:center;justify-content:center;transform:translateZ(36px);pointer-events:none;padding:0;}
-    .card-img{display:block;width:auto;height:100%;max-width:100%;border-radius:12px;filter:drop-shadow(0 28px 64px rgba(0,0,0,0.35));transform:translateZ(46px);image-rendering:auto;object-fit:contain}
-    @media (max-width:520px){.card{left:18px;width:200px;height:300px}.card-img{width:95%;margin:14px auto}}
+    /* ---------- static character (transparent png) with glitch behind it ---------- */
+    .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;z-index:70;pointer-events:none}
+    .card-glitch{position:absolute;inset:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
+    .card-glitch .j-line{position:absolute;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",ui-monospace,monospace;font-weight:700;color:#fff;letter-spacing:2px;pointer-events:none;text-shadow:0 0 8px rgba(255,255,255,0.14);will-change:transform,opacity;animation:glitchJitter 1.8s steps(6) infinite}
+    .card-glitch .j-line.layer-r{color:var(--accent-r);opacity:0.7;animation-delay:-.1s}
+    .card-glitch .j-line.layer-b{color:var(--accent-b);opacity:0.7;animation-delay:.1s}
+    .card-glitch .j-line.layer-w{color:#ffffff;opacity:0.9}
+    .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
+    .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
+    @media (max-width:520px){.card{left:18px;width:200px;height:300px}}
 
     .bg-strong-noise{position:fixed;inset:0;z-index:21;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.02) 0 1px, transparent 2px);opacity:0.025;mix-blend-mode:overlay}
-
-    @media (max-width:520px){.card{left:12px;width:170px;height:260px}}
   </style>
 </head>
 <body>
@@ -144,15 +146,11 @@
 
   <div class="center"><span class="name">Working Ram</span></div>
 
-  <!-- floating 3D card -->
+  <!-- static character, glitch text sits behind the transparent png -->
   <div class="card" id="ramCard" aria-hidden="false">
-    <div class="card-inner">
-      <div class="card-back"></div>
-      <div class="card-glitch" id="cardGlitch" aria-hidden="true"></div>
-      <div class="card-text" aria-hidden="true">ラム</div>
-      <div class="card-front">
-        <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img" decoding="async" loading="lazy">
-      </div>
+    <div class="card-glitch" id="cardGlitch" aria-hidden="true"></div>
+    <div class="card-front">
+      <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img" decoding="async" loading="lazy">
     </div>
   </div>
 
@@ -181,131 +179,67 @@
         videoOverlay.classList.add('on');
       }, {once:true});
 
-      /* ---------- card 3D tilt ---------- */
-      const card = document.getElementById('ramCard');
-      const inner = card && card.querySelector('.card-inner');
-      if(!card || !inner) return;
-
-      let mouseX = 0, mouseY = 0;
-      let trX = 0, trY = 0, trZ = 0;
-      const ease = 0.14;
-      const maxYDeg = 28;
-      const maxXDeg = 22;
-      const maxZDeg = 3.6;
-
-      function onMove(e){
-        const x = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
-        const y = (e.clientY !== undefined) ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY) || 0;
-        const nx = (x - window.innerWidth / 2) / (window.innerWidth / 2);
-        const ny = (y - window.innerHeight / 2) / (window.innerHeight / 2);
-        mouseX = Math.max(-1, Math.min(1, nx));
-        mouseY = Math.max(-1, Math.min(1, ny));
-      }
-      window.addEventListener('mousemove', onMove, {passive:true});
-      window.addEventListener('touchmove', onMove, {passive:true});
-
-      function raf(){
-        const targetRotY = mouseX * maxYDeg;
-        const targetRotX = -mouseY * maxXDeg;
-        const targetRotZ = mouseX * maxZDeg * 0.6;
-        trY += (targetRotY - trY) * ease;
-        trX += (targetRotX - trX) * ease;
-        trZ += (targetRotZ - trZ) * ease;
-        const tx = mouseX * 8;
-        const ty = mouseY * 10;
-        card.style.transform = `translateY(calc(-50% + ${ty}px)) translateX(${tx}px)`;
-        inner.style.transform = `rotateX(${trX.toFixed(3)}deg) rotateY(${trY.toFixed(3)}deg) rotateZ(${trZ.toFixed(3)}deg)`;
-        requestAnimationFrame(raf);
-      }
-      requestAnimationFrame(raf);
-
-      /* ---------- card glitch text (small, japanese) ---------- */
+      /* ---------- static character: build glitch text once, animate via CSS only ---------- */
       const cardGlitch = document.getElementById('cardGlitch');
       if(cardGlitch){
-        const TEXT = 'ラム ラム ラム ラム';
-        const layers = [];
-        const count = 8;
+        const TEXT = 'ラム ラム ラム';
+        const count = 6;
+        const frag = document.createDocumentFragment();
         for(let i=0;i<count;i++){
+          const leftPct = 4 + (i * 9) % 40;
+          const topPct = (i / Math.max(count - 1, 1)) * 100;
+          const fontSize = 12 + (i % 3) * 4;
+          const delay = -(i * 0.3).toFixed(2) + 's';
+
           const w = document.createElement('div');
           w.className = 'j-line layer-w';
-          w.style.fontSize = `${12 + (i % 3) * 4}px`;
-          w.style.top = `${(i / Math.max(count - 1, 1)) * 105}%`;
-          w.style.left = `${6 + (i * 7) % 40}%`;
-          w.style.opacity = 0.9;
+          w.style.cssText = `font-size:${fontSize}px;top:${topPct}%;left:${leftPct}%;animation-delay:${delay}`;
           w.textContent = TEXT;
-          cardGlitch.appendChild(w);
-          layers.push(w);
+          frag.appendChild(w);
 
           const r = w.cloneNode(true);
           r.className = 'j-line layer-r';
-          r.style.left = `calc(${w.style.left} - 4px)`;
-          r.style.opacity = 0.7;
-          cardGlitch.appendChild(r);
-          layers.push(r);
+          r.style.cssText = w.style.cssText + `;left:${leftPct - 1}%;animation-delay:${delay}`;
+          frag.appendChild(r);
 
           const b = w.cloneNode(true);
           b.className = 'j-line layer-b';
-          b.style.left = `calc(${w.style.left} + 4px)`;
-          b.style.opacity = 0.7;
-          cardGlitch.appendChild(b);
-          layers.push(b);
+          b.style.cssText = w.style.cssText + `;left:${leftPct + 1}%;animation-delay:${delay}`;
+          frag.appendChild(b);
         }
-        function jitterCard(){
-          layers.forEach((el, idx) => {
-            el.style.transform = `translate3d(${(Math.random()*12-6)}px, ${(Math.random()*8-4)}px, 0) rotate(${(Math.random()*1-0.5)}deg)`;
-            el.style.opacity = 0.7 + (Math.sin(idx + Date.now()/1000) + 1) * 0.12;
-            el.style.filter = `blur(${Math.random() < 0.03 ? 1.1 : 0}px) saturate(${1 + (Math.random()*0.35)})`;
-          });
-        }
-        setInterval(jitterCard, 220);
-        jitterCard();
+        cardGlitch.appendChild(frag);
       }
 
-      /* ---------- big background glitch (japanese, RAM) ---------- */
+      /* ---------- big background glitch (japanese) — built once, animated via CSS only ---------- */
       const bgGlitch = document.getElementById('bgGlitch');
       if(bgGlitch){
         const BTEXT = 'ラム';
-        const rows = 6;
-        const blayers = [];
+        const rows = 5;
+        const frag = document.createDocumentFragment();
         for(let i=0;i<rows;i++){
           const topPct = 8 + i * (84 / (rows - 1));
           const size = 34 + (i % 3) * 22;
+          const leftPct = -10 + (i * 13) % 60;
+          const delay = -(i * 0.45).toFixed(2) + 's';
+
           const w = document.createElement('div');
           w.className = 'j-line layer-w';
-          w.style.fontSize = `${size}px`;
-          w.style.top = `${topPct}%`;
-          w.style.left = `${-10 + (i * 13) % 60}%`;
+          w.style.cssText = `font-size:${size}px;top:${topPct}%;left:${leftPct}%;animation-delay:${delay}`;
           w.textContent = (BTEXT + '   ').repeat(6);
-          bgGlitch.appendChild(w);
-          blayers.push(w);
+          frag.appendChild(w);
 
           const r = w.cloneNode(true);
           r.className = 'j-line layer-r';
-          bgGlitch.appendChild(r);
-          blayers.push(r);
+          r.style.animationDelay = delay;
+          frag.appendChild(r);
 
           const b = w.cloneNode(true);
           b.className = 'j-line layer-b';
-          bgGlitch.appendChild(b);
-          blayers.push(b);
+          b.style.animationDelay = delay;
+          frag.appendChild(b);
         }
-        function jitterBg(){
-          blayers.forEach((el, idx) => {
-            const jump = Math.random() < 0.06;
-            el.style.transform = `translate3d(${(Math.random()*20-10)}px, 0, 0)`;
-            el.style.opacity = jump ? 0.2 : (0.5 + (Math.sin(idx + Date.now()/900) + 1) * 0.18);
-          });
-        }
-        setInterval(jitterBg, 260);
-        jitterBg();
+        bgGlitch.appendChild(frag);
       }
-
-      function handleResize(){
-        if(window.innerWidth < 520){
-          card.style.transform = 'translateY(-50%) translateX(0)';
-        }
-      }
-      window.addEventListener('resize', handleResize, {passive:true});
     })();
   </script>
 </body>
