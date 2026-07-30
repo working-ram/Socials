@@ -17,7 +17,7 @@
     /* ---------- background video ---------- */
     .video-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,var(--bg1),var(--bg2))}
     #bgVideo{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;
-      transform:translate(-50%,-50%) scale(1.08);filter:blur(4px) brightness(0.75) saturate(0.95);
+      transform:translate(-50%,-50%) scale(1.03);filter:blur(3px) brightness(0.75);
       opacity:0;transition:opacity 1.2s ease;object-fit:cover}
     .video-wrap.on #bgVideo{opacity:1}
     .video-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
@@ -187,7 +187,7 @@
       const cardGlitch = document.getElementById('cardGlitch');
       if(cardGlitch){
         const TEXT = 'ラム ラム ラム';
-        const count = 6;
+        const count = 4;
         const frag = document.createDocumentFragment();
         for(let i=0;i<count;i++){
           const leftPct = 4 + (i * 9) % 40;
