@@ -17,9 +17,17 @@
 
     /* ---------- background video ---------- */
     .video-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,var(--bg1),var(--bg2))}
-    #bgVideo{position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;
-      transform:translate(-50%,-50%);filter:brightness(0.5);
-      opacity:0;transition:opacity 1.2s ease;object-fit:cover}
+    #bgVideo{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center center;
+    filter:brightness(.5);
+    opacity:0;
+    transition:opacity 1.2s ease;
+    }
     .video-wrap.on #bgVideo{opacity:1}
     .video-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
       background:radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 68%, rgba(0,0,0,0.7) 100%);
@@ -308,8 +316,6 @@
          That's it — nothing else in the code needs to change. */
       const BG_VIDEOS = [
         'Assets/Surf Curse - Freaks.mp4',
-        'Assets/Mac DeMarco - For the First Time.mp4',
-        'Assets/I Thought I Saw Your Face Today.mp4',
         // 'Assets/your-next-video.mp4',  <- copy this line, rename the file, uncomment it
       ];
 
