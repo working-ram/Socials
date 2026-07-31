@@ -160,9 +160,9 @@
     </div>
   </div>
 
-  <!-- background video -->
+  <!-- background video: preloads and starts muted immediately so there's no delay on click -->
   <div class="video-wrap" id="videoWrap">
-    <video id="bgVideo" muted loop playsinline preload="auto">
+    <video id="bgVideo" muted loop playsinline autoplay preload="auto">
       <source src="Assets/just%20a%20freak.mp4" type="video/mp4">
     </video>
   </div>
@@ -194,7 +194,7 @@
   </div>
 
   <div class="sections">
-    <!-- PARTE 1: hero -->
+    <!-- PART 1: hero -->
     <section class="snap-section" id="heroSection">
       <div class="center"><span class="name">Working Ram</span></div>
 
@@ -206,10 +206,10 @@
       </div>
     </section>
 
-    <!-- PARTE 2: discord (se actualiza solo via Lanyard API) -->
+    <!-- PART 2: discord (auto-updates live via the Lanyard API) -->
     <section class="snap-section" id="discordSection">
       <div class="discord-card">
-        <img class="discord-avatar" id="discordAvatar" src="" alt="Avatar de Discord">
+        <img class="discord-avatar" id="discordAvatar" src="" alt="Discord avatar">
         <div class="discord-info">
           <div class="discord-displayname" id="discordDisplayName">Loading...</div>
           <div class="discord-username" id="discordUsername">@—</div>
@@ -232,14 +232,21 @@
       const videoWrap = document.getElementById('videoWrap');
       const videoOverlay = document.getElementById('videoOverlay');
 
-      // Diagnóstico: si el video no carga, esto va a avisar en la consola (F12)
-      // por qué (archivo no encontrado, formato no soportado, etc).
+      // Diagnostics: if the video fails to load, this logs why in the console (F12) -
+      // file not found, unsupported format, etc.
       video.addEventListener('error', function(){
         const err = video.error;
-        console.error('[bgVideo] no se pudo cargar. Revisá que "Assets/just a freak.mp4" exista con ese nombre EXACTO (mayúsculas/minúsculas incluidas).', err);
+        console.error('[bgVideo] failed to load. Check that "Assets/just a freak.mp4" exists with that EXACT name (matching case).', err);
       });
       video.addEventListener('loadeddata', function(){
-        console.log('[bgVideo] cargó correctamente.');
+        console.log('[bgVideo] loaded successfully.');
+      });
+
+      // Start loading + playing muted right away (autoplay policies generally allow
+      // muted autoplay). It stays invisible (opacity:0) behind the intro screen, so by
+      // the time the user clicks "Link Start" it's already playing - no buffering delay.
+      video.play().catch(function(){
+        // Autoplay was blocked; it will start for real on the button click below.
       });
 
       startBtn.addEventListener('click', function(){
@@ -247,17 +254,17 @@
         video.muted = false;
         video.volume = 0.2;
         video.play().catch(function(e){
-          console.warn('[bgVideo] play() con audio fue bloqueado por el navegador, reintentando muteado:', e);
+          console.warn('[bgVideo] play() with audio was blocked by the browser, retrying muted:', e);
           video.muted = true;
-          video.play().catch(function(e2){ console.error('[bgVideo] tampoco pudo reproducir muteado:', e2); });
+          video.play().catch(function(e2){ console.error('[bgVideo] could not play muted either:', e2); });
         });
         videoWrap.classList.add('on');
         videoOverlay.classList.add('on');
       }, {once:true});
 
-      /* ---------- discord presence, en vivo via Lanyard API ---------- */
-      // 1) Unite a https://discord.gg/lanyard (solo una vez, con tu cuenta de Discord)
-      // 2) Poné acá tu ID de usuario de Discord (Modo desarrollador -> clic derecho en tu perfil -> Copiar ID)
+      /* ---------- discord presence, live via the Lanyard API ---------- */
+      // 1) Join https://discord.gg/lanyard (only once, with your Discord account)
+      // 2) Put your Discord user ID here (Developer Mode -> right-click your profile -> Copy User ID)
       const DISCORD_ID = '781172416218136577';
 
       const discordAvatar = document.getElementById('discordAvatar');
@@ -290,13 +297,13 @@
             ? customStatus.state
             : (STATUS_LABELS[d.discord_status] || d.discord_status);
         }catch(e){
-          console.error('[lanyard] no se pudo obtener el estado de Discord:', e);
+          console.error('[lanyard] could not fetch Discord status:', e);
         }
       }
       updateDiscordCard();
       setInterval(updateDiscordCard, 20000);
 
-      /* ---------- un solo deslize = cambia de sección entera ---------- */
+      /* ---------- a single scroll/swipe advances a whole section ---------- */
       const sections = Array.from(document.querySelectorAll('.snap-section'));
       let currentIndex = 0;
       let isAnimating = false;
