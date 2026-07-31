@@ -160,9 +160,9 @@
     </div>
   </div>
 
-  <!-- background video: preloads and starts muted immediately so there's no delay on click -->
+  <!-- background video: preloads in the background (preload=auto), only starts playing on the button click -->
   <div class="video-wrap" id="videoWrap">
-    <video id="bgVideo" muted loop playsinline autoplay preload="auto">
+    <video id="bgVideo" muted loop playsinline preload="auto">
       <source src="Assets/just%20a%20freak.mp4" type="video/mp4">
     </video>
   </div>
@@ -242,12 +242,9 @@
         console.log('[bgVideo] loaded successfully.');
       });
 
-      // Start loading + playing muted right away (autoplay policies generally allow
-      // muted autoplay). It stays invisible (opacity:0) behind the intro screen, so by
-      // the time the user clicks "Link Start" it's already playing - no buffering delay.
-      video.play().catch(function(){
-        // Autoplay was blocked; it will start for real on the button click below.
-      });
+      // The <video preload="auto"> tag already starts buffering the file as soon as the
+      // page loads, so by the time the user clicks "Link Start" it should have little
+      // to no delay — but playback itself only starts on the click below.
 
       startBtn.addEventListener('click', function(){
         intro.classList.add('hidden');
