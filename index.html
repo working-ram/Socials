@@ -88,8 +88,62 @@
     .snap-section{min-height:100vh;scroll-snap-align:start;scroll-snap-stop:always;
       display:flex;align-items:center;justify-content:center;position:relative}
 
-    .center{position:relative;z-index:10;font-size:56px}
-    .name{background:linear-gradient(90deg,#f6f7f8,#dfe6ea);-webkit-background-clip:text;background-clip:text;color:transparent;filter:brightness(0.98);letter-spacing:2px}
+    /* ---------- HUD frame around the hero content ---------- */
+    .hud-frame{position:absolute;inset:0;pointer-events:none}
+    .hud-corner{position:absolute;width:22px;height:22px;border-color:rgba(255,255,255,0.3);border-style:solid;opacity:.75}
+    .hud-corner.tl{top:30px;left:30px;border-width:1px 0 0 1px}
+    .hud-corner.tr{top:30px;right:30px;border-width:1px 1px 0 0}
+    .hud-corner.bl{bottom:30px;left:30px;border-width:0 0 1px 1px}
+    .hud-corner.br{bottom:30px;right:30px;border-width:0 1px 1px 0}
+    .hud-readout{position:absolute;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:2.5px;
+      color:var(--gray);opacity:0;text-transform:uppercase}
+    .hud-readout.r1{top:46px;left:46px;animation:readoutBlink 7s ease-in-out infinite}
+    .hud-readout.r2{bottom:46px;right:46px;animation:readoutBlink 7s ease-in-out infinite 3.4s}
+    @keyframes readoutBlink{
+      0%,80%,100%{opacity:0}
+      84%,92%{opacity:.6}
+    }
+    @media (max-width:760px){.hud-readout{display:none}.hud-corner{width:16px;height:16px;top:16px;left:16px;right:16px;bottom:16px}}
+
+    /* ---------- scroll-down indicator ---------- */
+    .scroll-indicator{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;gap:6px;z-index:15;
+      background:transparent;border:none;color:var(--gray);cursor:pointer;pointer-events:auto;
+      font-family:ui-monospace,monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+      opacity:.7;transition:opacity .25s ease}
+    .scroll-indicator:hover{opacity:1;color:var(--white)}
+    .scroll-arrow{font-size:15px;line-height:1;animation:scrollBounce 1.8s ease-in-out infinite}
+    @keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+    @media (max-width:640px){.scroll-indicator{bottom:12px}}
+
+    .center{position:relative;z-index:10;font-size:56px;text-align:center;transition:transform .4s ease-out}
+    .name-wrap{position:relative;display:inline-block}
+    .name{background:linear-gradient(90deg,#f6f7f8,#dfe6ea);-webkit-background-clip:text;background-clip:text;color:transparent;
+      filter:brightness(0.98);letter-spacing:2px;
+      animation:nameGlow 5s ease-in-out infinite, nameGlitch 9s linear infinite}
+    .name-wrap::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+      opacity:0;pointer-events:none;animation:nameScan 6s ease-in-out infinite}
+    @keyframes nameGlow{
+      0%{text-shadow:0 0 16px rgba(255,255,255,0.12)}
+      50%{text-shadow:0 0 32px rgba(255,255,255,0.32)}
+      100%{text-shadow:0 0 16px rgba(255,255,255,0.12)}
+    }
+    @keyframes nameGlitch{
+      0%,96%,100%{transform:translate(0,0);opacity:1}
+      96.5%{transform:translate(-2px,1px);opacity:.7}
+      97%{transform:translate(2px,-1px);opacity:1}
+      97.5%{transform:translate(-1px,0);opacity:.85}
+      98%{transform:translate(0,0);opacity:1}
+    }
+    @keyframes nameScan{
+      0%,20%{top:0;opacity:0}
+      22%{opacity:.85}
+      38%{top:100%;opacity:0}
+      100%{top:100%;opacity:0}
+    }
+    .tagline{margin-top:14px;font-family:ui-monospace,monospace;font-size:12px;letter-spacing:4px;
+      color:var(--gray);text-transform:uppercase;min-height:14px}
     @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
@@ -113,6 +167,7 @@
         margin-top:calc(76px + 34vh + 28px);
         font-size:clamp(26px,7vw,34px);text-align:center;padding-left:16px;padding-right:16px;
       }
+      .tagline{font-size:10px;letter-spacing:2px}
     }
 
     /* ---------- discord card (second slide) ---------- */
@@ -194,7 +249,20 @@
   <div class="sections">
     <!-- PART 1: hero -->
     <section class="snap-section" id="heroSection">
-      <div class="center"><span class="name">Ram</span></div>
+      <div class="hud-frame">
+        <span class="hud-corner tl"></span>
+        <span class="hud-corner tr"></span>
+        <span class="hud-corner bl"></span>
+        <span class="hud-corner br"></span>
+        <span class="hud-readout r1">Signal: Stable</span>
+        <span class="hud-readout r2">Status: Online</span>
+      </div>
+
+      <div class="center" id="centerBlock">
+        <span class="name-wrap"><span class="name" id="nameText">Ram</span></span>
+        <!-- edit this line for your own tagline -->
+        <div class="tagline" id="tagline"></div>
+      </div>
 
       <!-- static character card -->
       <div class="card" id="ramCard" aria-hidden="false">
@@ -202,6 +270,11 @@
           <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img" decoding="async" loading="lazy">
         </div>
       </div>
+
+      <button class="scroll-indicator" id="scrollIndicator" type="button" aria-label="Scroll down">
+        <span>Scroll</span>
+        <span class="scroll-arrow">˅</span>
+      </button>
     </section>
 
     <!-- PART 2: discord (auto-updates live via the Lanyard API) -->
@@ -234,7 +307,7 @@
          To add another video: copy the line below, paste it, and change the filename.
          That's it — nothing else in the code needs to change. */
       const BG_VIDEOS = [
-        'Assets/just a freak.mp4',
+        'Assets/Surf Curse - Freaks.mp4',
         'Assets/Mac DeMarco - For the First Time.mp4',
         'Assets/I Thought I Saw Your Face Today.mp4',
         // 'Assets/your-next-video.mp4',  <- copy this line, rename the file, uncomment it
@@ -258,6 +331,47 @@
       // page loads, so by the time the user clicks "Link Start" it should have little
       // to no delay — but playback itself only starts on the click below.
 
+      /* ---------- text decode / typewriter effects, run once on click ---------- */
+      const nameText = document.getElementById('nameText');
+      const tagline = document.getElementById('tagline');
+
+      function decodeText(el, finalText, delay){
+        setTimeout(function(){
+          const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*0123456789';
+          const len = finalText.length;
+          let frame = 0;
+          const totalFrames = 18;
+          const timer = setInterval(function(){
+            frame++;
+            let out = '';
+            for(let i = 0; i < len; i++){
+              if(frame / totalFrames > i / len + 0.15){
+                out += finalText[i];
+              }else{
+                out += finalText[i] === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)];
+              }
+            }
+            el.textContent = out;
+            if(frame >= totalFrames){
+              clearInterval(timer);
+              el.textContent = finalText;
+            }
+          }, 40);
+        }, delay);
+      }
+
+      function typewriter(el, text, delay, speed){
+        setTimeout(function(){
+          let i = 0;
+          el.textContent = '';
+          const timer = setInterval(function(){
+            el.textContent += text[i];
+            i++;
+            if(i >= text.length) clearInterval(timer);
+          }, speed);
+        }, delay);
+      }
+
       startBtn.addEventListener('click', function(){
         intro.classList.add('hidden');
         video.muted = false;
@@ -269,7 +383,19 @@
         });
         videoWrap.classList.add('on');
         videoOverlay.classList.add('on');
+
+        // edit the tagline text below to whatever you want it to say
+        decodeText(nameText, 'Ram', 150);
+        typewriter(tagline, 'System Online', 900, 55);
       }, {once:true});
+
+      /* ---------- subtle parallax on the name block, no rAF loop ---------- */
+      const centerBlock = document.getElementById('centerBlock');
+      window.addEventListener('mousemove', function(e){
+        const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+        centerBlock.style.transform = `translate(${(nx * 6).toFixed(1)}px, ${(ny * 4).toFixed(1)}px)`;
+      }, {passive:true});
 
       /* ---------- discord presence, live via the Lanyard API ---------- */
       // 1) Join https://discord.gg/lanyard (only once, with your Discord account)
@@ -344,6 +470,10 @@
         if(Math.abs(deltaY) < 40) return;
         goToSection(currentIndex + (deltaY > 0 ? 1 : -1));
       }, {passive:true});
+
+      document.getElementById('scrollIndicator').addEventListener('click', function(){
+        goToSection(1);
+      });
 
     })();
   </script>
