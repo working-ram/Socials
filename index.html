@@ -99,7 +99,10 @@
     border-color:rgba(255,255,255,.8);
     letter-spacing:6px;
     }
-    @media (max-width:520px){.socials{bottom:10px;left:10px}.social-btn{padding:8px 12px;font-size:10px}}
+    @media (max-width:640px){
+      .socials{right:16px;gap:10px}
+      .social-btn{width:110px;font-size:9px;letter-spacing:2px;padding:6px 0}
+    }
 
     .stage{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:5}
 
@@ -232,6 +235,8 @@
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
     /* ---------- static card: plain vertical rectangle, white border, blurred backdrop ---------- */
+    /* position:fixed on purpose — stays pinned on screen at all times, same as .socials,
+       instead of scrolling away with the hero section. */
     .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
       overflow:hidden;z-index:70;pointer-events:none;
       border:2px solid rgba(255,255,255,0.9);
@@ -242,13 +247,16 @@
     .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
     .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
     @media (max-width:640px){
+      /* On small screens the big centered card collides with the section content
+         (title, discord card) since it never scrolls away. Shrink it into a small
+         corner badge instead — still fixed/always-visible, just out of the way. */
       .card{
-        left:50%;top:76px;transform:translateX(-50%);
-        width:56vw;max-width:230px;height:34vh;max-height:290px;
+        left:12px;top:auto;bottom:100px;transform:none;
+        width:88px;height:124px;max-width:none;max-height:none;
       }
-      #heroSection{align-items:flex-start}
+      #heroSection{align-items:center}
       .center{
-        margin-top:calc(76px + 34vh + 28px);
+        margin-top:0;
         font-size:clamp(26px,7vw,34px);text-align:center;padding-left:16px;padding-right:16px;
       }
       .tagline{font-size:10px;letter-spacing:2px}
