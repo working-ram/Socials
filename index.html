@@ -211,10 +211,10 @@
       <div class="discord-card">
         <img class="discord-avatar" id="discordAvatar" src="" alt="Avatar de Discord">
         <div class="discord-info">
-          <div class="discord-displayname" id="discordDisplayName">Cargando...</div>
+          <div class="discord-displayname" id="discordDisplayName">Loading...</div>
           <div class="discord-username" id="discordUsername">@—</div>
           <div class="discord-status"><span class="status-dot offline" id="statusDot"></span><span id="discordStatusText">—</span></div>
-          <a class="discord-msg-btn" id="discordMsgBtn" href="#" target="_blank" rel="noopener noreferrer">Enviar mensaje</a>
+          <a class="discord-msg-btn" id="discordMsgBtn" href="#" target="_blank" rel="noopener noreferrer">Ram's Discord profile</a>
         </div>
       </div>
     </section>
@@ -268,7 +268,7 @@
       const discordMsgBtn = document.getElementById('discordMsgBtn');
       discordMsgBtn.href = `https://discord.com/users/${DISCORD_ID}`;
 
-      const STATUS_LABELS = {online:'En línea', idle:'Ausente', dnd:'No molestar', offline:'Desconectado'};
+      const STATUS_LABELS = {online:'Online', idle:'Idle', dnd:'Do Not Disturb', offline:'Offline'};
 
       async function updateDiscordCard(){
         if(!DISCORD_ID) return;
