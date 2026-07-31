@@ -98,7 +98,7 @@
 
     /* ---------- HUD frame around the hero content ---------- */
     .hud-frame{position:absolute;inset:0;pointer-events:none}
-    .hud-corner{position:absolute;width:22px;height:22px;border-color:rgba(255,255,255,0.3);border-style:solid;opacity:.3}
+    .hud-corner{position:absolute;width:22px;height:22px;border-color:rgba(255,255,255,0.3);border-style:solid;opacity:1}
     .hud-corner.tl{top:30px;left:30px;border-width:1px 0 0 1px}
     .hud-corner.tr{top:30px;right:30px;border-width:1px 1px 0 0}
     .hud-corner.bl{bottom:30px;left:30px;border-width:0 0 1px 1px}
@@ -109,7 +109,7 @@
     .hud-readout.r2{bottom:46px;right:46px;animation:readoutBlink 7s ease-in-out infinite 3.4s}
     @keyframes readoutBlink{
       0%,80%,100%{opacity:0}
-      84%,92%{opacity:.3}
+      84%,92%{opacity:1}
     }
     @media (max-width:760px){.hud-readout{display:none}.hud-corner{width:16px;height:16px;top:16px;left:16px;right:16px;bottom:16px}}
 
@@ -253,6 +253,16 @@
   <div class="video-wrap" id="videoWrap">
     <video id="bgVideo" muted loop playsinline preload="auto"></video>
   </div>
+
+  <div class="hud-frame">
+        <span class="hud-corner tl"></span>
+        <span class="hud-corner tr"></span>
+        <span class="hud-corner bl"></span>
+        <span class="hud-corner br"></span>
+        <span class="hud-readout r1">Signal: Stable</span>
+        <span class="hud-readout r2">Status: Online</span>
+      </div>
+  
   <div class="video-overlay" id="videoOverlay"></div>
 
   <div class="toplink">
@@ -279,15 +289,6 @@
       </div>
     </div>
   </div>
-
-  <div class="hud-frame">
-        <span class="hud-corner tl"></span>
-        <span class="hud-corner tr"></span>
-        <span class="hud-corner bl"></span>
-        <span class="hud-corner br"></span>
-        <span class="hud-readout r1">Signal: Stable</span>
-        <span class="hud-readout r2">Status: Online</span>
-      </div>
 
   <div class="sections">
     <!-- PART 1: hero -->
