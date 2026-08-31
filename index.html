@@ -94,6 +94,35 @@
     transition:.25s;
     }
 
+    .scroll-controls{
+      position:fixed;
+      right:32px;
+      bottom:28px;
+      z-index:170;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      pointer-events:auto;
+    }
+    .scroll-control{
+      border:1px solid rgba(255,255,255,0.45);
+      background:rgba(10,10,12,0.52);
+      color:var(--white);
+      padding:10px 14px;
+      font-family:ui-monospace,monospace;
+      font-size:10px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:transform .2s ease, border-color .2s ease, background .2s ease;
+      box-shadow:0 16px 32px rgba(0,0,0,0.2);
+    }
+    .scroll-control:hover{
+      transform:translateX(-2px);
+      border-color:rgba(255,255,255,0.85);
+      background:rgba(255,255,255,0.06);
+    }
+
     .social-btn:hover{
     color:#fff;
     border-color:rgba(255,255,255,.8);
@@ -262,36 +291,22 @@
       .tagline{font-size:10px;letter-spacing:2px}
     }
 
-    /* ---------- discord card (second slide) ---------- */
-    .discord-card{
-      display:flex;align-items:center;gap:22px;
+    /* ---------- about me panel (temporary replacement for the Discord section) ---------- */
+    .about-card{
+      max-width:min(86vw,520px);
+      padding:32px 34px;
       border:2px solid rgba(255,255,255,0.9);
-      background:rgba(8,8,10,0.6);
-      padding:26px 34px;max-width:min(86vw,420px);
-      box-shadow:0 30px 80px rgba(0,0,0,0.5)}
-    .discord-avatar{width:88px;height:88px;min-width:88px;border-radius:50%;object-fit:cover;
-      border:2px solid rgba(255,255,255,0.7);background:rgba(255,255,255,0.05)}
-    .discord-info{display:flex;flex-direction:column;gap:6px;font-family:ui-monospace,monospace;min-width:0}
-    .discord-displayname{font-size:20px;font-weight:600;letter-spacing:0.5px;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .discord-username{font-size:13px;letter-spacing:0.5px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .discord-status{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-top:2px}
-    .status-dot{width:9px;height:9px;min-width:9px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
-    .status-dot.online{background:#3ba55c;color:#3ba55c}
-    .status-dot.idle{background:#faa61a;color:#faa61a}
-    .status-dot.dnd{background:#ed4245;color:#ed4245}
-    .status-dot.offline{background:#80848e;color:#80848e}
-    .discord-msg-btn{
-      margin-top:10px;align-self:flex-start;
-      font-family:ui-monospace,monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;
-      color:var(--white);text-decoration:none;border:1px solid rgba(230,230,235,0.4);
-      padding:8px 14px;background:rgba(255,255,255,0.03);pointer-events:auto;
-      transition:letter-spacing .3s ease,background .3s ease,border-color .3s ease;
+      background:rgba(8,8,10,0.58);
+      box-shadow:0 30px 80px rgba(0,0,0,0.5);
+      text-align:left;
+      font-family:ui-monospace,monospace;
     }
-    .discord-msg-btn:hover{letter-spacing:3px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.7)}
+    .about-kicker{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gray);margin-bottom:16px}
+    .about-title{font-size:clamp(30px,4vw,44px);letter-spacing:1px;color:var(--white);margin:0 0 18px}
+    .about-text{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.8);margin:0;max-width:42ch}
     @media (max-width:520px){
-      .discord-card{flex-direction:column;text-align:center;padding:24px}
-      .discord-displayname,.discord-username{white-space:normal}
-      .discord-msg-btn{align-self:center}
+      .about-card{padding:24px 22px}
+      .about-text{font-size:14px;line-height:1.7}
     }
 
     .bg-strong-noise{position:fixed;inset:0;z-index:21;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.02) 0 1px, transparent 2px);opacity:0.025;mix-blend-mode:overlay}
@@ -334,6 +349,11 @@
     <a class="social-btn" href="https://www.youtube.com/channel/UCKB0qujr2UYf0vBLeFjNpPg" target="_blank" rel="noopener noreferrer">Ram's YouTube</a>
   </div>
 
+  <div class="scroll-controls" aria-label="Section navigation">
+    <button class="scroll-control" data-target="about" type="button">↓ [About me]</button>
+    <button class="scroll-control" data-target="hero" type="button">↑ [Ram]</button>
+  </div>
+
   <div class="stage">
     <div class="ring r1"></div>
     <div class="ring r2"></div>
@@ -371,16 +391,12 @@
       </button>
     </section>
 
-    <!-- PART 2: discord (auto-updates live via the Lanyard API) -->
-    <section class="snap-section" id="discordSection">
-      <div class="discord-card">
-        <img class="discord-avatar" id="discordAvatar" src="" alt="Discord avatar">
-        <div class="discord-info">
-          <div class="discord-displayname" id="discordDisplayName">Loading...</div>
-          <div class="discord-username" id="discordUsername">@—</div>
-          <div class="discord-status"><span class="status-dot offline" id="statusDot"></span><span id="discordStatusText">—</span></div>
-          <a class="discord-msg-btn" id="discordMsgBtn" href="#" target="_blank" rel="noopener noreferrer">Ram's Discord profile</a>
-        </div>
+    <!-- PART 2: temporary replacement for the Discord section -->
+    <section class="snap-section" id="aboutSection">
+      <div class="about-card">
+        <div class="about-kicker">About me</div>
+        <h2 class="about-title" id="aboutTitle">Your title here</h2>
+        <p class="about-text" id="aboutText">Replace this text with a short intro about you, your work, your passions, or your online identity.</p>
       </div>
     </section>
   </div>
@@ -489,46 +505,22 @@
         centerBlock.style.transform = `translate(${(nx * 6).toFixed(1)}px, ${(ny * 4).toFixed(1)}px)`;
       }, {passive:true});
 
-      /* ---------- discord presence, live via the Lanyard API ---------- */
-      // 1) Join https://discord.gg/lanyard (only once, with your Discord account)
-      // 2) Put your Discord user ID here (Developer Mode -> right-click your profile -> Copy User ID)
-      const DISCORD_ID = '781172416218136577';
+      /* ---------- custom about me content (temporary replacement for Discord) ---------- */
+      const ABOUT_TITLE = 'Your title here';
+      const ABOUT_TEXT = 'Replace this text with a short intro about you, your work, your passions, or your online identity.';
 
-      const discordAvatar = document.getElementById('discordAvatar');
-      const discordDisplayName = document.getElementById('discordDisplayName');
-      const discordUsername = document.getElementById('discordUsername');
-      const statusDot = document.getElementById('statusDot');
-      const discordStatusText = document.getElementById('discordStatusText');
-      const discordMsgBtn = document.getElementById('discordMsgBtn');
-      discordMsgBtn.href = `https://discord.com/users/${DISCORD_ID}`;
+      const aboutTitle = document.getElementById('aboutTitle');
+      const aboutText = document.getElementById('aboutText');
+      aboutTitle.textContent = ABOUT_TITLE;
+      aboutText.textContent = ABOUT_TEXT;
 
-      const STATUS_LABELS = {online:'Online', idle:'Idle', dnd:'Do Not Disturb', offline:'Offline'};
-
-      async function updateDiscordCard(){
-        if(!DISCORD_ID) return;
-        try{
-          const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
-          const json = await res.json();
-          if(!json.success) return;
-          const d = json.data;
-          const user = d.discord_user;
-
-          discordAvatar.src = `https://api.lanyard.rest/${DISCORD_ID}.png`;
-          discordDisplayName.textContent = user.global_name || user.username;
-          discordUsername.textContent = '@' + user.username;
-
-          statusDot.className = 'status-dot ' + (d.discord_status || 'offline');
-
-          const customStatus = (d.activities || []).find(a => a.type === 4);
-          discordStatusText.textContent = (customStatus && customStatus.state)
-            ? customStatus.state
-            : (STATUS_LABELS[d.discord_status] || d.discord_status);
-        }catch(e){
-          console.error('[lanyard] could not fetch Discord status:', e);
-        }
-      }
-      updateDiscordCard();
-      setInterval(updateDiscordCard, 20000);
+      /* ---------- temporary: keep the old Discord code here for later reuse, but it is not active ---------- */
+      // const DISCORD_ID = '781172416218136577';
+      // const discordAvatar = document.getElementById('discordAvatar');
+      // ...
+      // async function updateDiscordCard(){ ... }
+      // updateDiscordCard();
+      // setInterval(updateDiscordCard, 20000);
 
       /* ---------- a single scroll/swipe advances a whole section ---------- */
       const sections = Array.from(document.querySelectorAll('.snap-section'));
@@ -565,6 +557,13 @@
 
       document.getElementById('scrollIndicator').addEventListener('click', function(){
         goToSection(1);
+      });
+
+      document.querySelectorAll('.scroll-control').forEach(function(button){
+        button.addEventListener('click', function(){
+          const target = button.dataset.target;
+          goToSection(target === 'about' ? 1 : 0);
+        });
       });
 
     })();
