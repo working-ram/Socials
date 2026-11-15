@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ram</title>
   <style>
+    
     :root{
       --bg1:#0a0a0c;--bg2:#111113;
       --white:#f2f4f6;--gray:#8a8f96;--gray-dark:#3a3d42;
@@ -281,6 +282,28 @@
     }
 
     .bg-strong-noise{position:fixed;inset:0;z-index:21;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.02) 0 1px, transparent 2px);opacity:0.025;mix-blend-mode:overlay}
+    /* ---------- portfolio carousel ---------- */
+#portfolioSection{padding:0 220px 0 48px}
+@media (max-width:640px){#portfolioSection{padding:0 126px 0 14px}}
+.portfolio{width:min(100%,760px);font-family:ui-monospace,monospace;text-align:center}
+.portfolio .about-kicker{margin-bottom:14px}
+.slides{display:grid}
+.slide{grid-area:1/1;opacity:0;pointer-events:none;transition:opacity 1.4s ease;margin:0}
+.slide.active{opacity:1;pointer-events:auto}
+.slide video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:contain;
+  border:2px solid rgba(255,255,255,0.9);box-shadow:0 30px 80px rgba(0,0,0,0.5)}
+.slide figcaption{margin-top:14px;padding:0 6px}
+.cap-title{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--white)}
+.cap-desc{margin-top:6px;font-size:13px;line-height:1.6;color:rgba(255,255,255,0.7)}
+.carousel-ctrl{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:16px}
+.c-btn{background:none;border:none;color:var(--gray);font-size:18px;cursor:pointer;transition:color .25s}
+.c-btn:hover{color:var(--white)}
+.dots{display:flex;gap:10px}
+.dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,0.6);background:transparent;padding:0;cursor:pointer;transition:background .3s}
+.dot.active{background:#fff}
+/* hide the fixed Ram card outside the hero */
+.card{transition:opacity .5s ease}
+body:not(.on-hero) .card{opacity:0}
   </style>
 </head>
 <body>
@@ -355,6 +378,9 @@
         <span>About Me</span>
         <span class="scroll-arrow">˅</span>
       </button>
+      <button class="scroll-indicator" id="aboutNext" type="button" aria-label="Portfolio">
+  <span>Portfolio</span><span class="scroll-arrow">˅</span>
+</button>
     </section>
 
     <!-- PART 2: temporary replacement for the Discord section -->
@@ -363,6 +389,18 @@
         <div class="about-kicker">About me</div>
         <h2 class="about-title" id="aboutTitle">Working Ram or just Ram</h2>
         <p class="about-text" id="aboutText">hallooo im ram, an roblox animator, scripter and content creator, i speak spanish and english! i dont really know what do i put here lol, ehhhhh i make games :D and if you're wondering, im a normal guy. dont be afraid and send a dm if you need something!</p>
+        <!-- PART 3: portfolio -->
+<section class="snap-section" id="portfolioSection">
+  <div class="portfolio">
+    <div class="about-kicker">Portfolio</div>
+    <div class="slides" id="slides"></div>
+    <div class="carousel-ctrl">
+      <button class="c-btn" id="pPrev" type="button" aria-label="Previous">‹</button>
+      <div class="dots" id="pDots"></div>
+      <button class="c-btn" id="pNext" type="button" aria-label="Next">›</button>
+    </div>
+  </div>
+</section>
       </div>
     </section>
   </div>
@@ -491,6 +529,7 @@
       /* ---------- a single scroll/swipe advances a whole section ---------- */
       const sections = Array.from(document.querySelectorAll('.snap-section'));
       let currentIndex = 0;
+      
       let isAnimating = false;
 
       function goToSection(index){
@@ -498,6 +537,7 @@
         if(index === currentIndex || isAnimating) return;
         isAnimating = true;
         currentIndex = index;
+        onSectionChange(index);
         sections[index].scrollIntoView({behavior:'smooth', block:'start'});
         setTimeout(function(){ isAnimating = false; }, 700);
       }
@@ -524,7 +564,95 @@
       document.getElementById('scrollIndicator').addEventListener('click', function(){
         goToSection(1);
       });
+      /* ---------- portfolio carousel ---------- */
+const PORTFOLIO = [
+  // Put your real filenames from Assets/portfolio_thing here
+  { src:'Assets/portfolio_thing/idkfr.mp4', title:'Got him..', desc:'I FOOL YOU GENIUS, this was for a blue lock game that i made with friends, it took me 30 minutes.' },
+  { src:'Assets/portfolio_thing/kirito_and_eugeo_mvp.mp4', title:'Besto Frendo', desc:'those swordman are incredible.' },
+  { src:'Assets/portfolio_thing/nose.mp4', title:'Temu Opera', desc:'This is an old animation for a racing game that i made, its old so its a bit choppy.' },
+  { src:'Assets/portfolio_thing/madanurui.mp4', title:'Half-Baked', desc:'UHHH? ITOSHI SAE?!. mada nurui' },
+];
 
+const BG_VOL = 0.2, BG_DUCK = 0.05;   // normal / lowered volume of the background video
+const slidesEl = document.getElementById('slides');
+const dotsEl = document.getElementById('pDots');
+const pVideos = [], pSlides = [], pDots = [];
+let pIndex = 0, inPortfolio = false, bgFade = null;
+
+function fadeBg(target){
+  clearInterval(bgFade);
+  bgFade = setInterval(function(){
+    const d = target - video.volume;
+    if(Math.abs(d) < 0.011){ video.volume = target; clearInterval(bgFade); return; }
+    video.volume = Math.max(0, Math.min(1, video.volume + Math.sign(d) * 0.01));
+  }, 40);
+}
+
+function updateDuck(){
+  const v = pVideos[pIndex];
+  const talking = inPortfolio && v && !v.paused && !v.ended && !v.muted;
+  fadeBg(talking ? BG_DUCK : BG_VOL);
+}
+
+function playActive(){
+  const v = pVideos[pIndex];
+  if(!v) return;
+  v.muted = false;
+  v.play().catch(function(){
+    v.muted = true;                       // browser blocked sound -> play silently
+    v.play().catch(function(){});
+  });
+}
+
+function showSlide(i){
+  pIndex = (i + PORTFOLIO.length) % PORTFOLIO.length;
+  pSlides.forEach(function(s, k){ s.classList.toggle('active', k === pIndex); });
+  pDots.forEach(function(d, k){ d.classList.toggle('active', k === pIndex); });
+  pVideos.forEach(function(v, k){ if(k !== pIndex){ v.pause(); v.currentTime = 0; } });
+  if(inPortfolio) playActive();
+  updateDuck();
+}
+
+PORTFOLIO.forEach(function(item, i){
+  const fig = document.createElement('figure');
+  fig.className = 'slide';
+  const v = document.createElement('video');
+  v.src = encodeURI(item.src);
+  v.playsInline = true;
+  v.preload = i === 0 ? 'auto' : 'metadata';
+  v.controls = true;
+  ['play','pause','ended','volumechange'].forEach(function(ev){ v.addEventListener(ev, updateDuck); });
+  v.addEventListener('ended', function(){
+    if(PORTFOLIO.length === 1){ v.currentTime = 0; playActive(); }
+    else showSlide(pIndex + 1);
+  });
+  const cap = document.createElement('figcaption');
+  const t = document.createElement('div'); t.className = 'cap-title'; t.textContent = item.title;
+  const d = document.createElement('div'); d.className = 'cap-desc'; d.textContent = item.desc;
+  cap.append(t, d);
+  fig.append(v, cap);
+  slidesEl.appendChild(fig);
+
+  const dot = document.createElement('button');
+  dot.className = 'dot'; dot.type = 'button'; dot.setAttribute('aria-label', 'Video ' + (i + 1));
+  dot.addEventListener('click', function(){ showSlide(i); });
+  dotsEl.appendChild(dot);
+
+  pVideos.push(v); pSlides.push(fig); pDots.push(dot);
+});
+
+document.getElementById('pPrev').addEventListener('click', function(){ showSlide(pIndex - 1); });
+document.getElementById('pNext').addEventListener('click', function(){ showSlide(pIndex + 1); });
+document.getElementById('aboutNext').addEventListener('click', function(){ goToSection(2); });
+showSlide(0);
+
+function onSectionChange(index){
+  inPortfolio = sections[index].id === 'portfolioSection';
+  document.body.classList.toggle('on-hero', sections[index].id === 'heroSection');
+  if(inPortfolio) playActive();
+  else pVideos.forEach(function(v){ v.pause(); });
+  updateDuck();
+}
     })();
   </script>
 </body>
