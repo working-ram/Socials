@@ -56,7 +56,7 @@
     /* ---------- social buttons ---------- */
     .socials{
       position:fixed;right:42px;top:50%;transform:translateY(-50%);
-      display:flex;flex-direction:column;align-items:flex-end;gap:14px;z-index:300;
+      display:flex;flex-direction:column;align-items:flex-end;gap:14px;z-index:120;
     }
     .social-btn{
       width:150px;padding:8px 0;text-align:right;
@@ -166,7 +166,8 @@
       backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
       box-shadow:0 30px 80px rgba(0,0,0,0.5);
       transition:opacity .5s ease}
-    body:not(.on-hero) .card{opacity:0}
+    body:not(.on-hero) .card{opacity:0;visibility:hidden;transition:opacity .5s ease, visibility 0s .5s}
+    .card, .card *{pointer-events:none !important}
     .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
     .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
     @media (max-width:640px){
@@ -631,6 +632,19 @@
         if(e.target.closest && e.target.closest('#openPortfolio, #openPortfolio2')){
           e.preventDefault();
           console.log('[portfolio] open clicked');
+          openPortfolio();
+        }
+      }, true);
+
+      // fallback for the "View portfolio" button under About me: if a click lands inside its box,
+      // open the portfolio even if some other layer is on top of the button.
+      document.addEventListener('click', function(e){
+        if(portfolioOpen || currentIndex !== 1) return;
+        const b = document.getElementById('openPortfolio2');
+        const r = b.getBoundingClientRect();
+        console.log('[click] target:', e.target);
+        if(r.width && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom){
+          console.log('[portfolio] open via button area');
           openPortfolio();
         }
       }, true);
