@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ram</title>
   <style>
-    
     :root{
       --bg1:#0a0a0c;--bg2:#111113;
       --white:#f2f4f6;--gray:#8a8f96;--gray-dark:#3a3d42;
@@ -19,15 +18,9 @@
     /* ---------- background video ---------- */
     .video-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,var(--bg1),var(--bg2))}
     #bgVideo{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center center;
-    filter:brightness(.5);
-    opacity:0;
-    transition:opacity 1.2s ease;
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;object-position:center center;
+      filter:brightness(.5);opacity:0;transition:opacity 1.2s ease;
     }
     .video-wrap.on #bgVideo{opacity:1}
     .video-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
@@ -62,44 +55,17 @@
 
     /* ---------- social buttons ---------- */
     .socials{
-    position:fixed;
-    right:42px;
-    top:50%;
-    transform:translateY(-50%);
-
-    display:flex;
-    flex-direction:column;
-    align-items:flex-end;
-    gap:14px;
-
-    z-index:120;
+      position:fixed;right:42px;top:50%;transform:translateY(-50%);
+      display:flex;flex-direction:column;align-items:flex-end;gap:14px;z-index:120;
     }
     .social-btn{
-    width:150px;
-
-    padding:8px 0;
-
-    text-align:right;
-
-    font-family:ui-monospace,monospace;
-    font-size:11px;
-    letter-spacing:4px;
-    text-transform:uppercase;
-
-    color:rgba(255,255,255,.85);
-
-    background:none;
-    border:none;
-    border-bottom:1px solid rgba(255,255,255,.18);
-
-    transition:.25s;
+      width:150px;padding:8px 0;text-align:right;
+      font-family:ui-monospace,monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;
+      color:rgba(255,255,255,.85);background:none;border:none;
+      border-bottom:1px solid rgba(255,255,255,.18);
+      transition:.25s;cursor:pointer;text-decoration:none;
     }
-
-    .social-btn:hover{
-    color:#fff;
-    border-color:rgba(255,255,255,.8);
-    letter-spacing:6px;
-    }
+    .social-btn:hover{color:#fff;border-color:rgba(255,255,255,.8);letter-spacing:6px}
     @media (max-width:640px){
       .socials{right:16px;gap:10px}
       .social-btn{width:110px;font-size:9px;letter-spacing:2px;padding:6px 0}
@@ -126,45 +92,28 @@
     .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 20px rgba(255,255,255,0.02) inset;pointer-events:none}
     .ring.r1{width:420px;height:420px;border:1px solid rgba(255,255,255,0.05)}
     .ring.r2{width:340px;height:340px;border:1px solid rgba(255,255,255,0.03)}
+
     /* ---------- scroll-snap sections ---------- */
     .sections{position:relative;z-index:10}
     .snap-section{min-height:100vh;scroll-snap-align:start;scroll-snap-stop:always;
       display:flex;align-items:center;justify-content:center;position:relative}
 
-    /* ---------- HUD frame around the hero content ---------- */
-    .hud-frame{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:150;
-    }
+    /* ---------- HUD frame ---------- */
+    .hud-frame{position:fixed;inset:0;pointer-events:none;z-index:150}
     .hud-corner{position:absolute;width:22px;height:22px;border-color:rgba(255,255,255,0.3);border-style:solid;opacity:1}
     .hud-corner.tl{top:30px;left:30px;border-width:1px 0 0 1px}
     .hud-corner.tr{top:30px;right:30px;border-width:1px 1px 0 0}
     .hud-corner.bl{bottom:30px;left:30px;border-width:0 0 1px 1px}
     .hud-corner.br{bottom:30px;right:30px;border-width:0 1px 1px 0}
     .hud-readout{
-    position:absolute;
-    font-family:ui-monospace,monospace;
-    font-size:10px;
-    letter-spacing:3px;
-    text-transform:uppercase;
-
-    color:rgba(255,255,255,.92);
-    opacity:.95;
-
-    text-shadow:
-        0 0 6px rgba(255,255,255,.45),
-        0 0 14px rgba(255,255,255,.18);
-
-    filter:drop-shadow(0 0 4px rgba(255,255,255,.15));
+      position:absolute;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+      color:rgba(255,255,255,.92);opacity:.95;
+      text-shadow:0 0 6px rgba(255,255,255,.45),0 0 14px rgba(255,255,255,.18);
+      filter:drop-shadow(0 0 4px rgba(255,255,255,.15));
     }
     .hud-readout.r1{top:46px;left:46px;animation:readoutBlink 7s ease-in-out infinite}
     .hud-readout.r2{bottom:46px;right:46px;animation:readoutBlink 7s ease-in-out infinite 3.4s}
-    @keyframes readoutBlink{
-      0%,80%,100%{opacity:0}
-      84%,92%{opacity:1}
-    }
+    @keyframes readoutBlink{0%,80%,100%{opacity:0}84%,92%{opacity:1}}
     @media (max-width:760px){.hud-readout{display:none}.hud-corner{width:16px;height:16px;top:16px;left:16px;right:16px;bottom:16px}}
 
     /* ---------- scroll-down indicator ---------- */
@@ -181,41 +130,19 @@
     .center{position:relative;z-index:10;font-size:56px;text-align:center;transition:transform .4s ease-out}
     .name-wrap{position:relative;display:inline-block}
     .name{
-    background:linear-gradient(180deg,#ffffff,#e7e7e7);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-
-    letter-spacing:2px;
-
-    text-shadow:
-        0 0 8px rgba(255,255,255,.55),
-        0 0 18px rgba(255,255,255,.30),
-        0 4px 20px rgba(0,0,0,.85);
-
-    filter:drop-shadow(0 2px 8px rgba(0,0,0,.7));
-
-    animation:
-        nameGlow 5s ease-in-out infinite,
-        nameGlitch 9s linear infinite;
+      background:linear-gradient(180deg,#ffffff,#e7e7e7);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      letter-spacing:2px;
+      text-shadow:0 0 8px rgba(255,255,255,.55),0 0 18px rgba(255,255,255,.30),0 4px 20px rgba(0,0,0,.85);
+      filter:drop-shadow(0 2px 8px rgba(0,0,0,.7));
+      animation:nameGlow 5s ease-in-out infinite, nameGlitch 9s linear infinite;
     }
     .name-wrap::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;
       background:linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
       opacity:0;pointer-events:none;animation:nameScan 6s ease-in-out infinite}
     @keyframes nameGlow{
-    0%,100%{
-        text-shadow:
-            0 0 8px rgba(255,255,255,.45),
-            0 0 18px rgba(255,255,255,.25),
-            0 4px 18px rgba(0,0,0,.85);
-    }
-
-    50%{
-        text-shadow:
-            0 0 15px rgba(255,255,255,.9),
-            0 0 35px rgba(255,255,255,.45),
-            0 6px 24px rgba(0,0,0,.9);
-    }
+      0%,100%{text-shadow:0 0 8px rgba(255,255,255,.45),0 0 18px rgba(255,255,255,.25),0 4px 18px rgba(0,0,0,.85)}
+      50%{text-shadow:0 0 15px rgba(255,255,255,.9),0 0 35px rgba(255,255,255,.45),0 6px 24px rgba(0,0,0,.9)}
     }
     @keyframes nameGlitch{
       0%,96%,100%{transform:translate(0,0);opacity:1}
@@ -224,89 +151,103 @@
       97.5%{transform:translate(-1px,0);opacity:.85}
       98%{transform:translate(0,0);opacity:1}
     }
-    @keyframes nameScan{
-      0%,20%{top:0;opacity:0}
-      22%{opacity:.85}
-      38%{top:100%;opacity:0}
-      100%{top:100%;opacity:0}
-    }
+    @keyframes nameScan{0%,20%{top:0;opacity:0}22%{opacity:.85}38%{top:100%;opacity:0}100%{top:100%;opacity:0}}
     .tagline{margin-top:14px;font-family:ui-monospace,monospace;font-size:12px;letter-spacing:4px;
       color:var(--gray);text-transform:uppercase;min-height:14px}
     @keyframes corePulse{0%{transform:translate(-50%,-50%) scale(0.99)}50%{transform:translate(-50%,-50%) scale(1.02)}100%{transform:translate(-50%,-50%) scale(0.99)}}
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-    /* ---------- static card: plain vertical rectangle, white border, blurred backdrop ---------- */
-    /* position:fixed on purpose — stays pinned on screen at all times, same as .socials,
-       instead of scrolling away with the hero section. */
+    /* ---------- static card ---------- */
     .card{position:fixed;left:32px;top:50%;transform:translateY(-50%);width:280px;height:380px;
       overflow:hidden;z-index:70;pointer-events:none;
       border:2px solid rgba(255,255,255,0.9);
       background:rgba(8,8,10,0.55);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      box-shadow:0 30px 80px rgba(0,0,0,0.5)}
+      backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      box-shadow:0 30px 80px rgba(0,0,0,0.5);
+      transition:opacity .5s ease}
+    body:not(.on-hero) .card{opacity:0}
     .card-front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
     .card-img{display:block;width:auto;height:100%;max-width:100%;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.4));object-fit:contain}
     @media (max-width:640px){
-      /* On small screens the big centered card collides with the section content
-         (title, discord card) since it never scrolls away. Shrink it into a small
-         corner badge instead — still fixed/always-visible, just out of the way. */
-      .card{
-        left:12px;top:auto;bottom:100px;transform:none;
-        width:88px;height:124px;max-width:none;max-height:none;
-      }
+      .card{left:12px;top:auto;bottom:100px;transform:none;width:88px;height:124px;max-width:none;max-height:none}
       #heroSection{align-items:center}
-      .center{
-        margin-top:0;
-        font-size:clamp(26px,7vw,34px);text-align:center;padding-left:16px;padding-right:16px;
-      }
+      .center{margin-top:0;font-size:clamp(26px,7vw,34px);text-align:center;padding-left:16px;padding-right:16px}
       .tagline{font-size:10px;letter-spacing:2px}
     }
 
-    /* ---------- about me panel (temporary replacement for the Discord section) ---------- */
+    /* ---------- about me panel ---------- */
     .about-card{
-      max-width:min(86vw,520px);
-      padding:32px 34px;
+      max-width:min(86vw,520px);padding:32px 34px;
       border:2px solid rgba(255,255,255,0.9);
       background:rgba(8,8,10,0.58);
       box-shadow:0 30px 80px rgba(0,0,0,0.5);
-      text-align:left;
-      font-family:ui-monospace,monospace;
+      text-align:left;font-family:ui-monospace,monospace;
     }
     .about-kicker{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gray);margin-bottom:16px}
     .about-title{font-size:clamp(30px,4vw,44px);letter-spacing:1px;color:var(--white);margin:0 0 18px}
     .about-text{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.8);margin:0;max-width:42ch}
+    .about-portfolio-btn{margin-top:22px;width:auto;padding-right:0}
     @media (max-width:520px){
       .about-card{padding:24px 22px}
       .about-text{font-size:14px;line-height:1.7}
     }
 
     .bg-strong-noise{position:fixed;inset:0;z-index:21;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.02) 0 1px, transparent 2px);opacity:0.025;mix-blend-mode:overlay}
-    /* ---------- portfolio carousel ---------- */
-#portfolioSection{padding:0 220px 0 48px}
-@media (max-width:640px){#portfolioSection{padding:0 126px 0 14px}}
-.portfolio{width:min(100%,760px);font-family:ui-monospace,monospace;text-align:center}
-.portfolio .about-kicker{margin-bottom:14px}
-.slides{display:grid}
-.slide{grid-area:1/1;opacity:0;pointer-events:none;transition:opacity 1.4s ease;margin:0}
-.slide.active{opacity:1;pointer-events:auto}
-.slide video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:contain;
-  border:2px solid rgba(255,255,255,0.9);box-shadow:0 30px 80px rgba(0,0,0,0.5)}
-.slide figcaption{margin-top:14px;padding:0 6px}
-.cap-title{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--white)}
-.cap-desc{margin-top:6px;font-size:13px;line-height:1.6;color:rgba(255,255,255,0.7)}
-.carousel-ctrl{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:16px}
-.c-btn{background:none;border:none;color:var(--gray);font-size:18px;cursor:pointer;transition:color .25s}
-.c-btn:hover{color:var(--white)}
-.dots{display:flex;gap:10px}
-.dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,0.6);background:transparent;padding:0;cursor:pointer;transition:background .3s}
-.dot.active{background:#fff}
-/* hide the fixed Ram card outside the hero */
-.card{transition:opacity .5s ease}
-body:not(.on-hero) .card{opacity:0}
+
+    /* =====================================================
+       PORTFOLIO SUB-PAGE (full-screen, opens over the main page)
+       z-index 100: above the sections, below the socials/top link (120)
+       and the HUD (150), so the page still feels like one site.
+       ===================================================== */
+    #portfolioPage{
+      position:fixed;inset:0;z-index:100;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:84px 220px 56px 48px;
+      background:rgba(0,0,0,0.72);
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      font-family:ui-monospace,monospace;
+      opacity:0;visibility:hidden;
+      transition:opacity .6s ease, visibility .6s ease;
+    }
+    #portfolioPage.open{opacity:1;visibility:visible}
+    .pf-back{
+      position:absolute;top:64px;left:48px;
+      background:none;border:none;cursor:pointer;
+      font-family:ui-monospace,monospace;font-size:12px;letter-spacing:4px;text-transform:uppercase;
+      color:rgba(255,255,255,.85);padding:8px 0;border-bottom:1px solid rgba(255,255,255,.18);
+      transition:.25s;
+    }
+    .pf-back:hover{color:#fff;border-color:rgba(255,255,255,.8);letter-spacing:6px}
+    .portfolio{
+      width:min(100%, calc((100vh - 270px) * 16 / 9), 1100px);
+      text-align:center;
+    }
+    .portfolio .about-kicker{margin-bottom:14px}
+    .slides{display:grid}
+    .slide{grid-area:1/1;opacity:0;pointer-events:none;transition:opacity 1.4s ease;margin:0}
+    .slide.active{opacity:1;pointer-events:auto}
+    .slide video{
+      display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:contain;
+      border:2px solid rgba(255,255,255,0.9);box-shadow:0 30px 80px rgba(0,0,0,0.5);
+    }
+    .slide figcaption{margin-top:14px;padding:0 6px}
+    .cap-title{font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--white)}
+    .cap-desc{margin-top:6px;font-size:13px;line-height:1.6;color:rgba(255,255,255,0.7)}
+    .carousel-ctrl{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:16px}
+    .c-btn{background:none;border:none;color:var(--gray);font-size:22px;cursor:pointer;transition:color .25s}
+    .c-btn:hover{color:var(--white)}
+    .dots{display:flex;gap:10px}
+    .dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,0.6);background:transparent;padding:0;cursor:pointer;transition:background .3s}
+    .dot.active{background:#fff}
+    @media (max-width:640px){
+      #portfolioPage{padding:90px 126px 50px 14px}
+      .pf-back{left:14px;top:58px;font-size:10px;letter-spacing:3px}
+      .portfolio{width:100%}
+      .cap-desc{font-size:12px}
+    }
   </style>
 </head>
-<body>
+<body class="on-hero">
 
   <!-- start / intro screen -->
   <div class="intro" id="intro">
@@ -316,20 +257,20 @@ body:not(.on-hero) .card{opacity:0}
     </div>
   </div>
 
-  <!-- background video: preloads in the background (preload=auto), only starts playing on the button click -->
+  <!-- background video -->
   <div class="video-wrap" id="videoWrap">
     <video id="bgVideo" muted loop playsinline preload="auto"></video>
   </div>
 
   <div class="hud-frame">
-        <span class="hud-corner tl"></span>
-        <span class="hud-corner tr"></span>
-        <span class="hud-corner bl"></span>
-        <span class="hud-corner br"></span>
-        <span class="hud-readout r1">Signal: Stable</span>
-        <span class="hud-readout r2">Status: Online</span>
-      </div>
-  
+    <span class="hud-corner tl"></span>
+    <span class="hud-corner tr"></span>
+    <span class="hud-corner bl"></span>
+    <span class="hud-corner br"></span>
+    <span class="hud-readout r1">Signal: Stable</span>
+    <span class="hud-readout r2">Status: Online</span>
+  </div>
+
   <div class="video-overlay" id="videoOverlay"></div>
 
   <div class="toplink">
@@ -338,6 +279,7 @@ body:not(.on-hero) .card{opacity:0}
   </div>
 
   <div class="socials">
+    <button class="social-btn" id="openPortfolio" type="button">Portfolio</button>
     <a class="social-btn" href="https://www.roblox.com/users/1307480512/profile" target="_blank" rel="noopener noreferrer">Ram's Roblox</a>
     <a class="social-btn" href="https://www.tiktok.com/@lider_ram" target="_blank" rel="noopener noreferrer">Ram's TikTok</a>
     <a class="social-btn" href="https://www.youtube.com/channel/UCKB0qujr2UYf0vBLeFjNpPg" target="_blank" rel="noopener noreferrer">Ram's YouTube</a>
@@ -360,14 +302,11 @@ body:not(.on-hero) .card{opacity:0}
   <div class="sections">
     <!-- PART 1: hero -->
     <section class="snap-section" id="heroSection">
-      
       <div class="center" id="centerBlock">
         <span class="name-wrap"><span class="name" id="nameText">Ram</span></span>
-        <!-- edit this line for your own tagline -->
         <div class="tagline" id="tagline"></div>
       </div>
 
-      <!-- static character card -->
       <div class="card" id="ramCard" aria-hidden="false">
         <div class="card-front">
           <img src="Assets/Ram_Art_Transparent.png" alt="Ram" class="card-img" decoding="async" loading="lazy">
@@ -378,31 +317,31 @@ body:not(.on-hero) .card{opacity:0}
         <span>About Me</span>
         <span class="scroll-arrow">˅</span>
       </button>
-      <button class="scroll-indicator" id="aboutNext" type="button" aria-label="Portfolio">
-  <span>Portfolio</span><span class="scroll-arrow">˅</span>
-</button>
     </section>
 
-    <!-- PART 2: temporary replacement for the Discord section -->
+    <!-- PART 2: about -->
     <section class="snap-section" id="aboutSection">
       <div class="about-card">
         <div class="about-kicker">About me</div>
         <h2 class="about-title" id="aboutTitle">Working Ram or just Ram</h2>
-        <p class="about-text" id="aboutText">hallooo im ram, an roblox animator, scripter and content creator, i speak spanish and english! i dont really know what do i put here lol, ehhhhh i make games :D and if you're wondering, im a normal guy. dont be afraid and send a dm if you need something!</p>
-        <!-- PART 3: portfolio -->
-<section class="snap-section" id="portfolioSection">
-  <div class="portfolio">
-    <div class="about-kicker">Portfolio</div>
-    <div class="slides" id="slides"></div>
-    <div class="carousel-ctrl">
-      <button class="c-btn" id="pPrev" type="button" aria-label="Previous">‹</button>
-      <div class="dots" id="pDots"></div>
-      <button class="c-btn" id="pNext" type="button" aria-label="Next">›</button>
-    </div>
-  </div>
-</section>
+        <p class="about-text" id="aboutText"></p>
+        <button class="social-btn about-portfolio-btn" id="openPortfolio2" type="button">View portfolio ›</button>
       </div>
     </section>
+  </div>
+
+  <!-- PORTFOLIO SUB-PAGE -->
+  <div id="portfolioPage" aria-hidden="true">
+    <button class="pf-back" id="pfBack" type="button">‹ Back</button>
+    <div class="portfolio">
+      <div class="about-kicker">Portfolio</div>
+      <div class="slides" id="slides"></div>
+      <div class="carousel-ctrl">
+        <button class="c-btn" id="pPrev" type="button" aria-label="Previous">‹</button>
+        <div class="dots" id="pDots"></div>
+        <button class="c-btn" id="pNext" type="button" aria-label="Next">›</button>
+      </div>
+    </div>
   </div>
 
   <div class="bg-scan"></div>
@@ -417,33 +356,23 @@ body:not(.on-hero) .card{opacity:0}
       const videoWrap = document.getElementById('videoWrap');
       const videoOverlay = document.getElementById('videoOverlay');
 
-      /* ---------- background videos (random pick) ----------
-         To add another video: copy the line below, paste it, and change the filename.
-         That's it — nothing else in the code needs to change. */
       const BG_VIDEOS = [
         'Assets/Surf Curse - Freaks.mp4',
-        // 'Assets/your-next-video.mp4',  <- copy this line, rename the file, uncomment it
+        // 'Assets/your-next-video.mp4',
       ];
 
       const chosenVideo = BG_VIDEOS[Math.floor(Math.random() * BG_VIDEOS.length)];
       video.src = encodeURI(chosenVideo);
       video.load();
 
-      // Diagnostics: if the video fails to load, this logs why in the console (F12) -
-      // file not found, unsupported format, etc.
       video.addEventListener('error', function(){
-        const err = video.error;
-        console.error(`[bgVideo] failed to load "${chosenVideo}". Check that the file exists in Assets/ with that EXACT name (matching case).`, err);
+        console.error(`[bgVideo] failed to load "${chosenVideo}". Check that the file exists in Assets/ with that EXACT name (matching case).`, video.error);
       });
       video.addEventListener('loadeddata', function(){
         console.log('[bgVideo] loaded successfully.');
       });
 
-      // The <video preload="auto"> tag already starts buffering the file as soon as the
-      // page loads, so by the time the user clicks "Link Start" it should have little
-      // to no delay — but playback itself only starts on the click below.
-
-      /* ---------- text decode / typewriter effects, run once on click ---------- */
+      /* ---------- text decode / typewriter effects ---------- */
       const nameText = document.getElementById('nameText');
       const tagline = document.getElementById('tagline');
 
@@ -487,7 +416,7 @@ body:not(.on-hero) .card{opacity:0}
       startBtn.addEventListener('click', function(){
         intro.classList.add('hidden');
         video.muted = false;
-        video.volume = 0.2;
+        video.volume = BG_VOL;
         video.play().catch(function(e){
           console.warn('[bgVideo] play() with audio was blocked by the browser, retrying muted:', e);
           video.muted = true;
@@ -496,12 +425,14 @@ body:not(.on-hero) .card{opacity:0}
         videoWrap.classList.add('on');
         videoOverlay.classList.add('on');
 
-        // edit the tagline text below to whatever you want it to say
         decodeText(nameText, 'Ram', 150);
         typewriter(tagline, 'System Online', 900, 55);
+
+        // if the page was opened directly on #portfolio, start the first video now
+        if(portfolioOpen) playActive();
       }, {once:true});
 
-      /* ---------- subtle parallax on the name block, no rAF loop ---------- */
+      /* ---------- subtle parallax on the name block ---------- */
       const centerBlock = document.getElementById('centerBlock');
       window.addEventListener('mousemove', function(e){
         const nx = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -509,40 +440,35 @@ body:not(.on-hero) .card{opacity:0}
         centerBlock.style.transform = `translate(${(nx * 6).toFixed(1)}px, ${(ny * 4).toFixed(1)}px)`;
       }, {passive:true});
 
-      /* ---------- custom about me content (temporary replacement for Discord) ---------- */
+      /* ---------- about me content ---------- */
       const ABOUT_TITLE = 'Working Ram';
       const ABOUT_TEXT = 'hallooo im ram, an roblox animator, scripter and content creator, i speak spanish and english! i dont really know what do i put here lol, ehhhhh i make games :D and if you are wondering, im a normal guy. dont be afraid and send a dm if you need something!';
+      document.getElementById('aboutTitle').textContent = ABOUT_TITLE;
+      document.getElementById('aboutText').textContent = ABOUT_TEXT;
 
-      const aboutTitle = document.getElementById('aboutTitle');
-      const aboutText = document.getElementById('aboutText');
-      aboutTitle.textContent = ABOUT_TITLE;
-      aboutText.textContent = ABOUT_TEXT;
-
-      /* ---------- temporary: keep the old Discord code here for later reuse, but it is not active ---------- */
-      // const DISCORD_ID = '781172416218136577';
-      // const discordAvatar = document.getElementById('discordAvatar');
-      // ...
-      // async function updateDiscordCard(){ ... }
-      // updateDiscordCard();
-      // setInterval(updateDiscordCard, 20000);
-
-      /* ---------- a single scroll/swipe advances a whole section ---------- */
+      /* ---------- section navigation (hero <-> about) ---------- */
       const sections = Array.from(document.querySelectorAll('.snap-section'));
       let currentIndex = 0;
-      
       let isAnimating = false;
+      let portfolioOpen = false;
+
+      function refreshCard(){
+        // the fixed Ram card is only visible on the hero and when the sub-page is closed
+        document.body.classList.toggle('on-hero', currentIndex === 0 && !portfolioOpen);
+      }
 
       function goToSection(index){
         index = Math.max(0, Math.min(sections.length - 1, index));
         if(index === currentIndex || isAnimating) return;
         isAnimating = true;
         currentIndex = index;
-        onSectionChange(index);
+        refreshCard();
         sections[index].scrollIntoView({behavior:'smooth', block:'start'});
         setTimeout(function(){ isAnimating = false; }, 700);
       }
 
       window.addEventListener('wheel', function(e){
+        if(portfolioOpen){ e.preventDefault(); return; }
         if(isAnimating){ e.preventDefault(); return; }
         if(Math.abs(e.deltaY) < 4) return;
         e.preventDefault();
@@ -554,7 +480,7 @@ body:not(.on-hero) .card{opacity:0}
         touchStartY = e.touches[0].clientY;
       }, {passive:true});
       window.addEventListener('touchend', function(e){
-        if(touchStartY === null || isAnimating) return;
+        if(portfolioOpen || touchStartY === null || isAnimating) return;
         const deltaY = touchStartY - e.changedTouches[0].clientY;
         touchStartY = null;
         if(Math.abs(deltaY) < 40) return;
@@ -564,95 +490,136 @@ body:not(.on-hero) .card{opacity:0}
       document.getElementById('scrollIndicator').addEventListener('click', function(){
         goToSection(1);
       });
-      /* ---------- portfolio carousel ---------- */
-const PORTFOLIO = [
-  // Put your real filenames from Assets/portfolio_thing here
-  { src:'Assets/portfolio_thing/idkfr.mp4', title:'Got him..', desc:'I FOOL YOU GENIUS, this was for a blue lock game that i made with friends, it took me 30 minutes.' },
-  { src:'Assets/portfolio_thing/kirito_and_eugeo_mvp.mp4', title:'Besto Frendo', desc:'those swordman are incredible.' },
-  { src:'Assets/portfolio_thing/nose.mp4', title:'Temu Opera', desc:'This is an old animation for a racing game that i made, its old so its a bit choppy.' },
-  { src:'Assets/portfolio_thing/madanurui.mp4', title:'Half-Baked', desc:'UHHH? ITOSHI SAE?!. mada nurui' },
-];
 
-const BG_VOL = 0.2, BG_DUCK = 0.05;   // normal / lowered volume of the background video
-const slidesEl = document.getElementById('slides');
-const dotsEl = document.getElementById('pDots');
-const pVideos = [], pSlides = [], pDots = [];
-let pIndex = 0, inPortfolio = false, bgFade = null;
+      /* =====================================================
+         PORTFOLIO SUB-PAGE
+         ===================================================== */
+      const PORTFOLIO = [
+        { src:'Assets/portfolio_thing/idkfr.mp4', title:'Got him..', desc:'I FOOL YOU GENIUS, this was for a blue lock game that i made with friends, it took me 30 minutes.' },
+        { src:'Assets/portfolio_thing/kirito_and_eugeo_mvp.mp4', title:'Besto Frendo', desc:'those swordman are incredible.' },
+        { src:'Assets/portfolio_thing/nose.mp4', title:'Temu Opera', desc:'This is an old animation for a racing game that i made, its old so its a bit choppy.' },
+        { src:'Assets/portfolio_thing/madanurui.mp4', title:'Half-Baked', desc:'UHHH? ITOSHI SAE?!. mada nurui' },
+      ];
 
-function fadeBg(target){
-  clearInterval(bgFade);
-  bgFade = setInterval(function(){
-    const d = target - video.volume;
-    if(Math.abs(d) < 0.011){ video.volume = target; clearInterval(bgFade); return; }
-    video.volume = Math.max(0, Math.min(1, video.volume + Math.sign(d) * 0.01));
-  }, 40);
-}
+      const PORTFOLIO_VOL = 0.4;            // volume of the portfolio videos (40%)
+      var BG_VOL = 0.2, BG_DUCK = 0.05;     // background video: normal / lowered while a portfolio video plays
 
-function updateDuck(){
-  const v = pVideos[pIndex];
-  const talking = inPortfolio && v && !v.paused && !v.ended && !v.muted;
-  fadeBg(talking ? BG_DUCK : BG_VOL);
-}
+      const page = document.getElementById('portfolioPage');
+      const slidesEl = document.getElementById('slides');
+      const dotsEl = document.getElementById('pDots');
+      const pVideos = [], pSlides = [], pDots = [];
+      let pIndex = 0, bgFade = null;
 
-function playActive(){
-  const v = pVideos[pIndex];
-  if(!v) return;
-  v.muted = false;
-  v.play().catch(function(){
-    v.muted = true;                       // browser blocked sound -> play silently
-    v.play().catch(function(){});
-  });
-}
+      // smooth background volume fade (never pauses or restarts the background video)
+      function fadeBg(target){
+        clearInterval(bgFade);
+        bgFade = setInterval(function(){
+          const d = target - video.volume;
+          if(Math.abs(d) < 0.011){ video.volume = target; clearInterval(bgFade); return; }
+          video.volume = Math.max(0, Math.min(1, video.volume + Math.sign(d) * 0.01));
+        }, 40);
+      }
 
-function showSlide(i){
-  pIndex = (i + PORTFOLIO.length) % PORTFOLIO.length;
-  pSlides.forEach(function(s, k){ s.classList.toggle('active', k === pIndex); });
-  pDots.forEach(function(d, k){ d.classList.toggle('active', k === pIndex); });
-  pVideos.forEach(function(v, k){ if(k !== pIndex){ v.pause(); v.currentTime = 0; } });
-  if(inPortfolio) playActive();
-  updateDuck();
-}
+      function updateDuck(){
+        const v = pVideos[pIndex];
+        const talking = portfolioOpen && v && !v.paused && !v.ended && !v.muted && v.volume > 0;
+        fadeBg(talking ? BG_DUCK : BG_VOL);
+      }
 
-PORTFOLIO.forEach(function(item, i){
-  const fig = document.createElement('figure');
-  fig.className = 'slide';
-  const v = document.createElement('video');
-  v.src = encodeURI(item.src);
-  v.playsInline = true;
-  v.preload = i === 0 ? 'auto' : 'metadata';
-  v.controls = true;
-  ['play','pause','ended','volumechange'].forEach(function(ev){ v.addEventListener(ev, updateDuck); });
-  v.addEventListener('ended', function(){
-    if(PORTFOLIO.length === 1){ v.currentTime = 0; playActive(); }
-    else showSlide(pIndex + 1);
-  });
-  const cap = document.createElement('figcaption');
-  const t = document.createElement('div'); t.className = 'cap-title'; t.textContent = item.title;
-  const d = document.createElement('div'); d.className = 'cap-desc'; d.textContent = item.desc;
-  cap.append(t, d);
-  fig.append(v, cap);
-  slidesEl.appendChild(fig);
+      function playActive(){
+        const v = pVideos[pIndex];
+        if(!v) return;
+        v.muted = false;
+        v.volume = PORTFOLIO_VOL;
+        v.play().catch(function(){
+          v.muted = true;                      // browser blocked sound -> play silently
+          v.play().catch(function(){});
+        });
+      }
 
-  const dot = document.createElement('button');
-  dot.className = 'dot'; dot.type = 'button'; dot.setAttribute('aria-label', 'Video ' + (i + 1));
-  dot.addEventListener('click', function(){ showSlide(i); });
-  dotsEl.appendChild(dot);
+      function showSlide(i){
+        pIndex = (i + PORTFOLIO.length) % PORTFOLIO.length;
+        pSlides.forEach(function(s, k){ s.classList.toggle('active', k === pIndex); });
+        pDots.forEach(function(d, k){ d.classList.toggle('active', k === pIndex); });
+        pVideos.forEach(function(v, k){ if(k !== pIndex){ v.pause(); v.currentTime = 0; } });
+        if(portfolioOpen) playActive();
+        updateDuck();
+      }
 
-  pVideos.push(v); pSlides.push(fig); pDots.push(dot);
-});
+      PORTFOLIO.forEach(function(item, i){
+        const fig = document.createElement('figure');
+        fig.className = 'slide';
 
-document.getElementById('pPrev').addEventListener('click', function(){ showSlide(pIndex - 1); });
-document.getElementById('pNext').addEventListener('click', function(){ showSlide(pIndex + 1); });
-document.getElementById('aboutNext').addEventListener('click', function(){ goToSection(2); });
-showSlide(0);
+        const v = document.createElement('video');
+        v.src = encodeURI(item.src);
+        v.playsInline = true;
+        v.preload = i === 0 ? 'auto' : 'metadata';
+        v.controls = true;
+        v.volume = PORTFOLIO_VOL;
+        ['play','pause','ended','volumechange'].forEach(function(ev){ v.addEventListener(ev, updateDuck); });
+        v.addEventListener('ended', function(){
+          if(PORTFOLIO.length === 1){ v.currentTime = 0; playActive(); }
+          else showSlide(pIndex + 1);
+        });
 
-function onSectionChange(index){
-  inPortfolio = sections[index].id === 'portfolioSection';
-  document.body.classList.toggle('on-hero', sections[index].id === 'heroSection');
-  if(inPortfolio) playActive();
-  else pVideos.forEach(function(v){ v.pause(); });
-  updateDuck();
-}
+        const cap = document.createElement('figcaption');
+        const t = document.createElement('div'); t.className = 'cap-title'; t.textContent = item.title;
+        const d = document.createElement('div'); d.className = 'cap-desc'; d.textContent = item.desc;
+        cap.append(t, d);
+        fig.append(v, cap);
+        slidesEl.appendChild(fig);
+
+        const dot = document.createElement('button');
+        dot.className = 'dot'; dot.type = 'button'; dot.setAttribute('aria-label', 'Video ' + (i + 1));
+        dot.addEventListener('click', function(){ showSlide(i); });
+        dotsEl.appendChild(dot);
+
+        pVideos.push(v); pSlides.push(fig); pDots.push(dot);
+      });
+
+      document.getElementById('pPrev').addEventListener('click', function(){ showSlide(pIndex - 1); });
+      document.getElementById('pNext').addEventListener('click', function(){ showSlide(pIndex + 1); });
+      showSlide(0);
+
+      /* ---- open / close the sub-page (driven by the URL hash) ---- */
+      function applyPortfolioState(open){
+        if(open === portfolioOpen) return;
+        portfolioOpen = open;
+        page.classList.toggle('open', open);
+        page.setAttribute('aria-hidden', open ? 'false' : 'true');
+        refreshCard();
+        if(open){
+          // only start playing if the user already pressed "Link Start"
+          if(intro.classList.contains('hidden')) playActive();
+        }else{
+          pVideos.forEach(function(v){ v.pause(); });
+        }
+        updateDuck();
+      }
+
+      function openPortfolio(){ if(location.hash !== '#portfolio') location.hash = 'portfolio'; }
+      function closePortfolio(){
+        if(location.hash === '#portfolio'){
+          history.length > 1 ? history.back() : (location.hash = '');
+        }
+        // history.back() fires hashchange; also close right away for a snappy feel
+        applyPortfolioState(false);
+      }
+
+      window.addEventListener('hashchange', function(){
+        applyPortfolioState(location.hash === '#portfolio');
+      });
+
+      document.getElementById('openPortfolio').addEventListener('click', openPortfolio);
+      document.getElementById('openPortfolio2').addEventListener('click', openPortfolio);
+      document.getElementById('pfBack').addEventListener('click', closePortfolio);
+      window.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' && portfolioOpen) closePortfolio();
+      });
+
+      // opened directly with #portfolio in the URL
+      if(location.hash === '#portfolio') applyPortfolioState(true);
+
     })();
   </script>
 </body>
