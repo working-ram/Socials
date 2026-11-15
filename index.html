@@ -30,10 +30,10 @@
 
     /* ---------- intro / start screen ---------- */
     .intro{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
-      background:#000;transition:opacity .9s ease, visibility .9s ease}
+      background:#000;cursor:pointer;transition:opacity .9s ease, visibility .9s ease}
     .intro.hidden{opacity:0;visibility:hidden;pointer-events:none}
     .intro-frame{position:relative;padding:2px}
-    .intro-frame::before,.intro-frame::after{content:"";position:absolute;width:18px;height:18px;border-color:var(--gray);border-style:solid;opacity:.7}
+    .intro-frame::before,.intro-frame::after{content:"";position:absolute;width:18px;height:18px;border-color:var(--gray);border-style:solid;opacity:.7;pointer-events:none}
     .intro-frame::before{top:-14px;left:-14px;border-width:1px 0 0 1px}
     .intro-frame::after{bottom:-14px;right:-14px;border-width:0 1px 1px 0}
     #startBtn{
@@ -56,7 +56,7 @@
     /* ---------- social buttons ---------- */
     .socials{
       position:fixed;right:42px;top:50%;transform:translateY(-50%);
-      display:flex;flex-direction:column;align-items:flex-end;gap:14px;z-index:120;
+      display:flex;flex-direction:column;align-items:flex-end;gap:14px;z-index:300;
     }
     .social-btn{
       width:150px;padding:8px 0;text-align:right;
@@ -186,7 +186,7 @@
     .about-kicker{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gray);margin-bottom:16px}
     .about-title{font-size:clamp(30px,4vw,44px);letter-spacing:1px;color:var(--white);margin:0 0 18px}
     .about-text{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.8);margin:0;max-width:42ch}
-    .about-portfolio-btn{margin-top:22px;width:auto;padding-right:0}
+    .about-portfolio-btn{margin-top:22px;width:auto;padding-right:0;text-align:left}
     @media (max-width:520px){
       .about-card{padding:24px 22px}
       .about-text{font-size:14px;line-height:1.7}
@@ -196,8 +196,8 @@
 
     /* =====================================================
        PORTFOLIO SUB-PAGE (full-screen, opens over the main page)
-       z-index 100: above the sections, below the socials/top link (120)
-       and the HUD (150), so the page still feels like one site.
+       z-index 100: above the sections, below the socials (300),
+       the top link (120) and the HUD (150).
        ===================================================== */
     #portfolioPage{
       position:fixed;inset:0;z-index:100;
@@ -205,12 +205,12 @@
       padding:84px 220px 56px 48px;
       background:rgba(0,0,0,0.88);
       font-family:ui-monospace,monospace;
-      opacity:0;visibility:hidden;
+      opacity:0;visibility:hidden;pointer-events:none;
       transition:opacity .6s ease, visibility .6s ease;
     }
-    #portfolioPage.open{opacity:1;visibility:visible}
+    #portfolioPage.open{opacity:1;visibility:visible;pointer-events:auto}
     .pf-back{
-      position:absolute;top:64px;left:48px;
+      position:absolute;top:64px;left:48px;z-index:2;
       background:none;border:none;cursor:pointer;
       font-family:ui-monospace,monospace;font-size:12px;letter-spacing:4px;text-transform:uppercase;
       color:rgba(255,255,255,.85);padding:8px 0;border-bottom:1px solid rgba(255,255,255,.18);
@@ -224,9 +224,9 @@
     .portfolio .about-kicker{margin-bottom:14px}
     .slides{display:grid}
     .slide{grid-area:1/1;opacity:0;visibility:hidden;pointer-events:none;margin:0;
-  transition:opacity 1.4s ease, visibility 0s 1.4s}
-.slide.active{opacity:1;visibility:visible;pointer-events:auto;
-  transition:opacity 1.4s ease, visibility 0s}
+      transition:opacity 1.4s ease, visibility 0s 1.4s}
+    .slide.active{opacity:1;visibility:visible;pointer-events:auto;
+      transition:opacity 1.4s ease, visibility 0s}
     .slide video{
       display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:contain;
       border:2px solid rgba(255,255,255,0.9);box-shadow:0 30px 80px rgba(0,0,0,0.5);
@@ -246,18 +246,20 @@
       .portfolio{width:100%}
       .cap-desc{font-size:12px}
     }
+
+    /* turn off the heavy effects hidden behind the portfolio while it is open */
     body.pf-open .bg-scan,
-body.pf-open .bg-strong-noise,
-body.pf-open .stage,
-body.pf-open .card{display:none}
+    body.pf-open .bg-strong-noise,
+    body.pf-open .stage,
+    body.pf-open .card{display:none}
   </style>
 </head>
 <body class="on-hero">
 
-  <!-- start / intro screen -->
+  <!-- start / intro screen (the whole screen is clickable) -->
   <div class="intro" id="intro">
     <div class="intro-frame">
-      <button id="startBtn">Link Start</button>
+      <button id="startBtn" type="button">Link Start</button>
       <div class="intro-sub">[ press to connect ]</div>
     </div>
   </div>
@@ -354,33 +356,31 @@ body.pf-open .card{display:none}
 
   <script>
     (function(){
-      /* ---------- intro / start button -> video ---------- */
+      /* ---------- settings ---------- */
+      var BG_VOL = 0.2, BG_DUCK = 0.05;     // background video: normal / lowered while a portfolio video plays
+      var PORTFOLIO_VOL = 0.4;              // portfolio videos volume (40%)
+
+      /* ---------- elements ---------- */
       const intro = document.getElementById('intro');
-      const startBtn = document.getElementById('startBtn');
       const video = document.getElementById('bgVideo');
       const videoWrap = document.getElementById('videoWrap');
       const videoOverlay = document.getElementById('videoOverlay');
+      const nameText = document.getElementById('nameText');
+      const tagline = document.getElementById('tagline');
 
+      /* ---------- background video ---------- */
       const BG_VIDEOS = [
         'Assets/Surf Curse - Freaks.mp4',
         // 'Assets/your-next-video.mp4',
       ];
-
       const chosenVideo = BG_VIDEOS[Math.floor(Math.random() * BG_VIDEOS.length)];
       video.src = encodeURI(chosenVideo);
       video.load();
-
       video.addEventListener('error', function(){
-        console.error(`[bgVideo] failed to load "${chosenVideo}". Check that the file exists in Assets/ with that EXACT name (matching case).`, video.error);
-      });
-      video.addEventListener('loadeddata', function(){
-        console.log('[bgVideo] loaded successfully.');
+        console.error('[bgVideo] failed to load "' + chosenVideo + '". Check the file exists in Assets/ with that EXACT name.', video.error);
       });
 
-      /* ---------- text decode / typewriter effects ---------- */
-      const nameText = document.getElementById('nameText');
-      const tagline = document.getElementById('tagline');
-
+      /* ---------- text effects ---------- */
       function decodeText(el, finalText, delay){
         setTimeout(function(){
           const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*0123456789';
@@ -398,10 +398,7 @@ body.pf-open .card{display:none}
               }
             }
             el.textContent = out;
-            if(frame >= totalFrames){
-              clearInterval(timer);
-              el.textContent = finalText;
-            }
+            if(frame >= totalFrames){ clearInterval(timer); el.textContent = finalText; }
           }, 40);
         }, delay);
       }
@@ -418,18 +415,18 @@ body.pf-open .card{display:none}
         }, delay);
       }
 
-      startBtn.addEventListener('click', function(){
+      /* ---------- Link Start (click anywhere on the intro screen) ---------- */
+      intro.addEventListener('click', function(){
         intro.classList.add('hidden');
         video.muted = false;
         video.volume = BG_VOL;
         video.play().catch(function(e){
-          console.warn('[bgVideo] play() with audio was blocked by the browser, retrying muted:', e);
+          console.warn('[bgVideo] play() with audio was blocked, retrying muted:', e);
           video.muted = true;
           video.play().catch(function(e2){ console.error('[bgVideo] could not play muted either:', e2); });
         });
         videoWrap.classList.add('on');
         videoOverlay.classList.add('on');
-
         decodeText(nameText, 'Ram', 150);
         typewriter(tagline, 'System Online', 900, 55);
 
@@ -437,19 +434,17 @@ body.pf-open .card{display:none}
         if(portfolioOpen) playActive();
       }, {once:true});
 
-      /* ---------- subtle parallax on the name block ---------- */
+      /* ---------- parallax on the name block ---------- */
       const centerBlock = document.getElementById('centerBlock');
       window.addEventListener('mousemove', function(e){
         const nx = (e.clientX / window.innerWidth - 0.5) * 2;
         const ny = (e.clientY / window.innerHeight - 0.5) * 2;
-        centerBlock.style.transform = `translate(${(nx * 6).toFixed(1)}px, ${(ny * 4).toFixed(1)}px)`;
+        centerBlock.style.transform = 'translate(' + (nx * 6).toFixed(1) + 'px, ' + (ny * 4).toFixed(1) + 'px)';
       }, {passive:true});
 
       /* ---------- about me content ---------- */
-      const ABOUT_TITLE = 'Working Ram';
-      const ABOUT_TEXT = 'hallooo im ram, an roblox animator, scripter and content creator, i speak spanish and english! i dont really know what do i put here lol, ehhhhh i make games :D and if you are wondering, im a normal guy. dont be afraid and send a dm if you need something!';
-      document.getElementById('aboutTitle').textContent = ABOUT_TITLE;
-      document.getElementById('aboutText').textContent = ABOUT_TEXT;
+      document.getElementById('aboutTitle').textContent = 'Working Ram';
+      document.getElementById('aboutText').textContent = 'hallooo im ram, an roblox animator, scripter and content creator, i speak spanish and english! i dont really know what do i put here lol, ehhhhh i make games :D and if you are wondering, im a normal guy. dont be afraid and send a dm if you need something!';
 
       /* ---------- section navigation (hero <-> about) ---------- */
       const sections = Array.from(document.querySelectorAll('.snap-section'));
@@ -458,7 +453,6 @@ body.pf-open .card{display:none}
       let portfolioOpen = false;
 
       function refreshCard(){
-        // the fixed Ram card is only visible on the hero and when the sub-page is closed
         document.body.classList.toggle('on-hero', currentIndex === 0 && !portfolioOpen);
       }
 
@@ -481,9 +475,7 @@ body.pf-open .card{display:none}
       }, {passive:false});
 
       let touchStartY = null;
-      window.addEventListener('touchstart', function(e){
-        touchStartY = e.touches[0].clientY;
-      }, {passive:true});
+      window.addEventListener('touchstart', function(e){ touchStartY = e.touches[0].clientY; }, {passive:true});
       window.addEventListener('touchend', function(e){
         if(portfolioOpen || touchStartY === null || isAnimating) return;
         const deltaY = touchStartY - e.changedTouches[0].clientY;
@@ -492,9 +484,7 @@ body.pf-open .card{display:none}
         goToSection(currentIndex + (deltaY > 0 ? 1 : -1));
       }, {passive:true});
 
-      document.getElementById('scrollIndicator').addEventListener('click', function(){
-        goToSection(1);
-      });
+      document.getElementById('scrollIndicator').addEventListener('click', function(){ goToSection(1); });
 
       /* =====================================================
          PORTFOLIO SUB-PAGE
@@ -506,9 +496,6 @@ body.pf-open .card{display:none}
         { src:'Assets/portfolio_thing/madanurui.mp4', title:'Half-Baked', desc:'UHHH? ITOSHI SAE?!. mada nurui' },
       ];
 
-      const PORTFOLIO_VOL = 0.4;            // volume of the portfolio videos (40%)
-      var BG_VOL = 0.2, BG_DUCK = 0.05;     // background video: normal / lowered while a portfolio video plays
-
       const page = document.getElementById('portfolioPage');
       const slidesEl = document.getElementById('slides');
       const dotsEl = document.getElementById('pDots');
@@ -519,9 +506,9 @@ body.pf-open .card{display:none}
       function fadeBg(target){
         clearInterval(bgFade);
         bgFade = setInterval(function(){
-          const d = target - video.volume;
-          if(Math.abs(d) < 0.011){ video.volume = target; clearInterval(bgFade); return; }
-          video.volume = Math.max(0, Math.min(1, video.volume + Math.sign(d) * 0.01));
+          const diff = target - video.volume;
+          if(Math.abs(diff) < 0.011){ video.volume = target; clearInterval(bgFade); return; }
+          video.volume = Math.max(0, Math.min(1, video.volume + Math.sign(diff) * 0.01));
         }, 40);
       }
 
@@ -534,10 +521,11 @@ body.pf-open .card{display:none}
       function playActive(){
         const v = pVideos[pIndex];
         if(!v) return;
+        if(!v.getAttribute('src')) return;     // still downloading: loadVideo() calls playActive() when it is ready
         v.muted = false;
         v.volume = PORTFOLIO_VOL;
         v.play().catch(function(){
-          v.muted = true;                      // browser blocked sound -> play silently
+          v.muted = true;                       // browser blocked sound -> play silently
           v.play().catch(function(){});
         });
       }
@@ -556,9 +544,8 @@ body.pf-open .card{display:none}
         fig.className = 'slide';
 
         const v = document.createElement('video');
-        v.src = encodeURI(item.src);
         v.playsInline = true;
-        v.preload = i === 0 ? 'auto' : 'metadata';
+        v.preload = 'auto';
         v.controls = true;
         v.volume = PORTFOLIO_VOL;
         ['play','pause','ended','volumechange'].forEach(function(ev){ v.addEventListener(ev, updateDuck); });
@@ -582,16 +569,33 @@ body.pf-open .card{display:none}
         pVideos.push(v); pSlides.push(fig); pDots.push(dot);
       });
 
+      /* ---- preload every portfolio video while the "Link Start" screen is showing ---- */
+      function loadVideo(i){
+        const url = encodeURI(PORTFOLIO[i].src);
+        function ready(src){
+          pVideos[i].src = src;
+          // if the user is already waiting on this video, start it now
+          if(portfolioOpen && pIndex === i && intro.classList.contains('hidden')) playActive();
+        }
+        return fetch(url)
+          .then(function(r){ if(!r.ok) throw new Error('bad response'); return r.blob(); })
+          .then(function(b){ ready(URL.createObjectURL(b)); })
+          .catch(function(){ ready(url); });     // fallback: normal streaming (also used on file://)
+      }
+      // one after another, first video first
+      PORTFOLIO.reduce(function(p, _, i){ return p.then(function(){ return loadVideo(i); }); }, Promise.resolve());
+
       document.getElementById('pPrev').addEventListener('click', function(){ showSlide(pIndex - 1); });
       document.getElementById('pNext').addEventListener('click', function(){ showSlide(pIndex + 1); });
       showSlide(0);
 
-      /* ---- open / close the sub-page (driven by the URL hash) ---- */
+      /* ---- open / close the sub-page ---- */
       function applyPortfolioState(open){
         if(open === portfolioOpen) return;
         portfolioOpen = open;
         page.classList.toggle('open', open);
         page.setAttribute('aria-hidden', open ? 'false' : 'true');
+        document.body.classList.toggle('pf-open', open);
         refreshCard();
         if(open){
           // only start playing if the user already pressed "Link Start"
@@ -602,18 +606,23 @@ body.pf-open .card{display:none}
         updateDuck();
       }
 
-      function openPortfolio(){ if(location.hash !== '#portfolio') location.hash = 'portfolio'; }
+      // The buttons never depend on the URL hash, so they can't get "stuck".
+      function openPortfolio(){
+        if(location.hash !== '#portfolio'){
+          try{ history.pushState(null, '', '#portfolio'); }catch(e){ location.hash = 'portfolio'; }
+        }
+        applyPortfolioState(true);
+      }
       function closePortfolio(){
         if(location.hash === '#portfolio'){
-          history.length > 1 ? history.back() : (location.hash = '');
+          try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){ location.hash = ''; }
         }
-        // history.back() fires hashchange; also close right away for a snappy feel
         applyPortfolioState(false);
       }
 
-      window.addEventListener('hashchange', function(){
-        applyPortfolioState(location.hash === '#portfolio');
-      });
+      // browser back/forward buttons and manual hash edits
+      window.addEventListener('popstate', function(){ applyPortfolioState(location.hash === '#portfolio'); });
+      window.addEventListener('hashchange', function(){ applyPortfolioState(location.hash === '#portfolio'); });
 
       document.getElementById('openPortfolio').addEventListener('click', openPortfolio);
       document.getElementById('openPortfolio2').addEventListener('click', openPortfolio);
@@ -624,7 +633,6 @@ body.pf-open .card{display:none}
 
       // opened directly with #portfolio in the URL
       if(location.hash === '#portfolio') applyPortfolioState(true);
-
     })();
   </script>
 </body>
